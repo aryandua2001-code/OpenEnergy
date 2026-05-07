@@ -165,7 +165,7 @@ function setupScrollSync() {
     const target = section.offsetTop + SNAP_POINTS[index] * total;
 
     lenis.scrollTo(target, {
-      duration: 1.5,
+      duration: 0.9,
       easing: (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
       onComplete: () => {
         currentSnap = index;
