@@ -135,14 +135,12 @@ function setupScrollSync() {
   const section     = document.getElementById('cinematic-section');
   const heroOverlay = document.getElementById('hero-overlay');
 
-  // Lenis for smooth scroll on page sections below the cinematic.
-  // Stopped initially — native scroll drives the cinematic section.
-  // Started when the user passes the cinematic (ScrollTrigger.onLeave).
+  // Lenis for smooth scroll across the full page including cinematic.
+  // ScrollTrigger reads Lenis's smooth position via the scroll event.
   const lenis = new Lenis({ lerp: 0.08, autoRaf: false });
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
   lenis.on('scroll', ScrollTrigger.update);
-  lenis.stop();
 
   // ── Hero fade ─────────────────────────────────────────────
   if (heroOverlay) {
@@ -185,9 +183,7 @@ function setupScrollSync() {
       });
       if (self.progress >= 0.90) overlays[4].classList.add('active');
     },
-    // Unlock Lenis once the user scrolls past the cinematic
-    onLeave()      { lenis.start(); ScrollTrigger.refresh(); },
-    onEnterBack()  { lenis.stop();  },
+    onLeave()     { ScrollTrigger.refresh(); },
   });
 }
 
