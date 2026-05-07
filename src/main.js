@@ -1,20 +1,8 @@
 // ═══════════════════════════════════════════════════════════
-//  OpenEnergy — GSAP ScrollTrigger scrub+snap cinematic
-//
-//  Scroll   : Native scroll drives ScrollTrigger for the cinematic.
-//             Lenis (stopped during cinematic) handles the page
-//             sections below for premium smooth scroll.
-//
-//  Frames   : WebP (53% smaller than JPG) + img.decode() forces
-//             the browser to decompress BEFORE the frame is needed,
-//             so drawImage() is instant — no JIT decode stutter.
-//
-//  Snap     : ScrollTrigger snap snaps to chapter boundaries via
-//             GSAP's own easing engine — no competing scroll
-//             systems, no lerp settling tail.
+//  OpenEnergy — Lenis + Chapter Navigation Cinematic
+//  Frames: WebP (51% smaller) + img.decode() pre-decoding
 // ═══════════════════════════════════════════════════════════
 
-// Always start from top on reload
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
@@ -28,9 +16,9 @@ gsap.registerPlugin(ScrollTrigger);
 // ── Config ──────────────────────────────────────────────────
 const FRAME_COUNT        = 240;
 const FRAME_PATH         = '/frames';
-const FRAME_EXT          = 'webp';   // WebP: 53% smaller, faster decode
+const FRAME_EXT          = 'webp';
 const PRELOAD_BATCH      = 10;
-const FRAMES_PER_CHAPTER = 48;       // 240 / 5 chapters
+const FRAMES_PER_CHAPTER = 48;
 
 const CHAPTERS = [
   { start: 0.10, end: 0.30 },
@@ -51,7 +39,7 @@ const bitmaps    = new Array(FRAME_COUNT);
 let loadedCount  = 0;
 let currentFrame = 0;
 
-// ── Canvas — retina-aware, cover-fit ────────────────────────
+// ── Canvas ───────────────────────────────────────────────────
 function resizeCanvas() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w   = window.innerWidth;
@@ -67,37 +55,32 @@ function resizeCanvas() {
 }
 
 function drawFrame(index) {
-  let img = bitmaps[index];
-  // Fallback to nearest available frame so canvas never goes blank
-  if (!img) {
+  let bmp = bitmaps[index];
+  if (!bmp) {
     for (let d = 1; d < 48; d++) {
-      if (bitmaps[index - d]) { img = bitmaps[index - d]; break; }
-      if (bitmaps[index + d]) { img = bitmaps[index + d]; break; }
+      if (bitmaps[index - d]) { bmp = bitmaps[index - d]; break; }
+      if (bitmaps[index + d]) { bmp = bitmaps[index + d]; break; }
     }
   }
-  if (!img) return;
-
+  if (!bmp) return;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const cw  = canvas.width  / dpr;
   const ch  = canvas.height / dpr;
-  const iw  = img.naturalWidth  || 1920;
-  const ih  = img.naturalHeight || 1080;
+  const iw  = bmp.naturalWidth  || 1920;
+  const ih  = bmp.naturalHeight || 1080;
   const s   = Math.max(cw / iw, ch / ih);
-  ctx.drawImage(img, (cw - iw * s) / 2, (ch - ih * s) / 2, iw * s, ih * s);
+  ctx.drawImage(bmp, (cw - iw * s) / 2, (ch - ih * s) / 2, iw * s, ih * s);
 }
 
 window.addEventListener('resize', resizeCanvas, { passive: true });
 
 // ── Frame loading — WebP + img.decode() ──────────────────────
-// img.decode() forces the browser to decompress the image into
-// raw pixel data BEFORE it's needed. drawImage() then copies
-// already-decoded pixels — zero JIT decode stutter on scroll.
 async function loadFrame(index) {
   if (bitmaps[index]) return;
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = async () => {
-      try { await img.decode(); } catch (_) {}  // pre-decode into memory
+      try { await img.decode(); } catch (_) {}
       bitmaps[index] = img;
       loadedCount++;
       if (index === 0) drawFrame(0);
@@ -122,7 +105,6 @@ function preloadChapter(chapterIndex) {
 }
 
 function preloadFrames() {
-  // Load chapter 0 first, then chain through 1–4 in background
   preloadChapter(0)
     .then(() => preloadChapter(1))
     .then(() => preloadChapter(2))
@@ -130,61 +112,115 @@ function preloadFrames() {
     .then(() => preloadChapter(4));
 }
 
-// ── Scroll + Frame Sync ──────────────────────────────────────
+// ── Scroll → Frame Sync ──────────────────────────────────────
 function setupScrollSync() {
   const section     = document.getElementById('cinematic-section');
   const heroOverlay = document.getElementById('hero-overlay');
 
-  // Lenis for smooth scroll across the full page including cinematic.
-  // ScrollTrigger reads Lenis's smooth position via the scroll event.
-  const lenis = new Lenis({ lerp: 0.08, autoRaf: false });
+  const lenis = new Lenis({ lerp: 0.12, autoRaf: false });
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
   lenis.on('scroll', ScrollTrigger.update);
 
-  // ── Hero fade ─────────────────────────────────────────────
-  if (heroOverlay) {
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: '+=8%',
-      scrub: true,
-      onUpdate: ({ progress }) => {
-        heroOverlay.style.opacity       = String(1 - progress);
-        heroOverlay.style.pointerEvents = progress > 0.5 ? 'none' : 'auto';
+  let scrollProgress = 0;
+
+  lenis.on('scroll', ({ scroll }) => {
+    const total    = section.offsetHeight - window.innerHeight;
+    const scrolled = scroll - section.offsetTop;
+    const progress = Math.max(0, Math.min(1, scrolled / total));
+    scrollProgress = progress;
+
+    const fi = Math.min(FRAME_COUNT - 1, Math.floor(progress * FRAME_COUNT));
+    if (fi !== currentFrame) { currentFrame = fi; drawFrame(fi); }
+
+    if (heroOverlay) {
+      heroOverlay.style.opacity       = progress < 0.10 ? String(1 - progress / 0.10) : '0';
+      heroOverlay.style.pointerEvents = progress < 0.10 ? 'auto' : 'none';
+    }
+
+    CHAPTERS.forEach((ch, i) => {
+      overlays[i].classList.toggle('active', progress >= ch.start && progress < ch.end);
+    });
+    if (progress >= 0.90) overlays[4].classList.add('active');
+  });
+
+  // ── Chapter-by-chapter navigation ───────────────────────────
+  const SNAP_POINTS = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
+  let currentSnap = 0;
+  let isAnimating = false;
+  let animDone    = false;
+  let quietTimer  = null;
+
+  function extendLock() {
+    clearTimeout(quietTimer);
+    quietTimer = setTimeout(() => {
+      if (animDone) { isAnimating = false; animDone = false; }
+    }, 400);
+  }
+
+  function goToChapter(index) {
+    if (isAnimating) return;
+    isAnimating = true;
+    animDone    = false;
+    clearTimeout(quietTimer);
+
+    const total  = section.offsetHeight - window.innerHeight;
+    const target = section.offsetTop + SNAP_POINTS[index] * total;
+
+    lenis.scrollTo(target, {
+      duration: 0.85,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
+      onComplete: () => {
+        currentSnap = index;
+        animDone    = true;
+        extendLock();
+        if (index + 2 <= 4) preloadChapter(index + 2);
       },
     });
   }
 
-  // ── Cinematic frame sequence + chapter snap ───────────────
-  // scrub: 0.5  → frames lag the scroll position by 0.5 s,
-  //              creating the intentional cinematic trailing feel.
-  // snap        → when scroll momentum stops, GSAP eases to the
-  //              nearest chapter boundary with power3.out — no
-  //              Lenis lerp, no competing scroll system.
-  ScrollTrigger.create({
-    trigger: section,
-    start:   'top top',
-    end:     'bottom bottom',
-    scrub:   0.5,
-    snap: {
-      snapTo:   [0, 0.2, 0.4, 0.6, 0.8, 1.0],
-      duration: { min: 0.3, max: 0.7 },
-      ease:     'power3.out',
-      delay:    0.05,
-      inertia:  false,
-    },
-    onUpdate(self) {
-      const fi = Math.min(FRAME_COUNT - 1, Math.floor(self.progress * FRAME_COUNT));
-      if (fi !== currentFrame) { currentFrame = fi; drawFrame(fi); }
+  // Capture phase fires before Lenis — stopImmediatePropagation
+  // prevents Lenis accumulating deltaY on fast/hard scrolls.
+  window.addEventListener('wheel', (e) => {
+    const total    = section.offsetHeight - window.innerHeight;
+    const scrolled = lenis.scroll - section.offsetTop;
+    if (scrolled < -60 || scrolled > total + 60) return;
 
-      CHAPTERS.forEach((ch, i) => {
-        overlays[i].classList.toggle('active', self.progress >= ch.start && self.progress < ch.end);
-      });
-      if (self.progress >= 0.90) overlays[4].classList.add('active');
-    },
-    onLeave()     { ScrollTrigger.refresh(); },
-  });
+    const down = e.deltaY > 0;
+
+    if (down && currentSnap < SNAP_POINTS.length - 1) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (!isAnimating) goToChapter(currentSnap + 1);
+      else if (animDone) extendLock();
+    } else if (!down && currentSnap > 0) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (!isAnimating) goToChapter(currentSnap - 1);
+      else if (animDone) extendLock();
+    }
+  }, { passive: false, capture: true });
+
+  // Touch support
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  window.addEventListener('touchend', (e) => {
+    const total    = section.offsetHeight - window.innerHeight;
+    const scrolled = lenis.scroll - section.offsetTop;
+    if (scrolled < -60 || scrolled > total + 60) return;
+
+    const delta = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(delta) < 25) return;
+
+    if (delta > 0 && currentSnap < SNAP_POINTS.length - 1) {
+      if (!isAnimating) goToChapter(currentSnap + 1);
+    } else if (delta < 0 && currentSnap > 0) {
+      if (!isAnimating) goToChapter(currentSnap - 1);
+    }
+  }, { passive: true });
 }
 
 // ── Navbar ───────────────────────────────────────────────────
@@ -194,7 +230,7 @@ function setupNavbar() {
   }, { passive: true });
 }
 
-// ── Hero entrance ────────────────────────────────────────────
+// ── Hero entrance animation ──────────────────────────────────
 function animateHero() {
   const words = document.querySelectorAll('.tagline-word');
   const sub   = document.getElementById('hero-sub');
