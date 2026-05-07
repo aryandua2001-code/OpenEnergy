@@ -52,7 +52,7 @@ let currentFrame = 0;
 
 // ── Canvas — retina-aware resize + cover-fit draw ────────────
 function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap at 2× — 3× retina = 9× memory
   const w   = window.innerWidth;
   const h   = window.innerHeight;
   canvas.width        = Math.round(w * dpr);
@@ -76,7 +76,7 @@ function drawFrame(index) {
     }
   }
   if (!bmp) return;
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const cw  = canvas.width  / dpr;
   const ch  = canvas.height / dpr;
   const iw  = bmp.width  || bmp.naturalWidth  || 1920;
@@ -96,9 +96,11 @@ async function loadFrame(index) {
   return new Promise((resolve) => {
     const img    = new Image();
     img.decoding = 'async';
-    img.onload = async () => {
-      try { bitmaps[index] = await createImageBitmap(img); }
-      catch (_) { bitmaps[index] = img; }
+    img.onload = () => {
+      // Store as plain HTMLImageElement — avoids createImageBitmap() which
+      // decodes JPEGs into ~8MB uncompressed GPU buffers each, totalling
+      // ~1.9GB on 240 frames and crashing iOS Safari on phones.
+      bitmaps[index] = img;
       loadedCount++;
       if (index === 0) drawFrame(0);
       resolve();
