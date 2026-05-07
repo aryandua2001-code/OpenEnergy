@@ -22,10 +22,11 @@ import '/src/style.css';
 gsap.registerPlugin(ScrollTrigger);
 
 // ── Config ──────────────────────────────────────────────────
-const FRAME_COUNT   = 240;
-const FRAME_PATH    = '/frames';
-const FRAME_EXT     = 'jpg';
-const PRELOAD_BATCH = 20;
+const FRAME_COUNT      = 240;
+const FRAME_PATH       = '/frames';
+const FRAME_EXT        = 'jpg';
+const PRELOAD_BATCH    = 10;
+const FRAMES_PER_CHAPTER = 48; // 240 / 5 chapters
 
 // Chapter boundaries (0–1 scroll progress)
 const CHAPTERS = [
@@ -78,42 +79,43 @@ function drawFrame(index) {
 
 window.addEventListener('resize', resizeCanvas, { passive: true });
 
-// ── Frame preloading with ImageBitmap ────────────────────────
-// Loads silently in the background — no visible loading screen.
-// Frames draw to canvas as they arrive; hero text is visible immediately.
+// ── Frame loading with ImageBitmap ───────────────────────────
+// Lazy by chapter: only load chapter 1 on start (~13 MB instead of 67 MB).
+// Each chapter's next chapter is preloaded in the background while the
+// user is reading the current chapter text — so frames are always ready.
+async function loadFrame(index) {
+  if (bitmaps[index]) return; // already loaded
+  return new Promise((resolve) => {
+    const img    = new Image();
+    img.decoding = 'async';
+    img.onload = async () => {
+      try { bitmaps[index] = await createImageBitmap(img); }
+      catch (_) { bitmaps[index] = img; }
+      loadedCount++;
+      if (index === 0) drawFrame(0);
+      resolve();
+    };
+    img.onerror = () => { loadedCount++; resolve(); };
+    img.src = `${FRAME_PATH}/frame_${String(index + 1).padStart(4, '0')}.${FRAME_EXT}`;
+  });
+}
+
+async function loadBatch(indices) {
+  for (let i = 0; i < indices.length; i += PRELOAD_BATCH) {
+    await Promise.all(indices.slice(i, i + PRELOAD_BATCH).map(loadFrame));
+  }
+}
+
+function preloadChapter(chapterIndex) {
+  const start   = chapterIndex * FRAMES_PER_CHAPTER;
+  const end     = Math.min(start + FRAMES_PER_CHAPTER, FRAME_COUNT);
+  const indices = Array.from({ length: end - start }, (_, i) => i + start);
+  return loadBatch(indices);
+}
+
 function preloadFrames() {
-  const priorityEnd     = Math.min(30, FRAME_COUNT);
-  const priorityIndices = Array.from({ length: priorityEnd }, (_, i) => i);
-  const restIndices     = Array.from({ length: FRAME_COUNT - priorityEnd }, (_, i) => i + priorityEnd);
-
-  async function loadFrame(index) {
-    return new Promise((resolve) => {
-      const img    = new Image();
-      img.decoding = 'async';
-      img.onload = async () => {
-        try {
-          bitmaps[index] = await createImageBitmap(img);
-        } catch (_) {
-          bitmaps[index] = img;
-        }
-        loadedCount++;
-        // Draw frame 0 as soon as it's ready so canvas isn't blank
-        if (index === 0) drawFrame(0);
-        resolve();
-      };
-      img.onerror = () => { loadedCount++; resolve(); };
-      img.src = `${FRAME_PATH}/frame_${String(index + 1).padStart(4, '0')}.${FRAME_EXT}`;
-    });
-  }
-
-  async function loadBatch(indices) {
-    for (let i = 0; i < indices.length; i += PRELOAD_BATCH) {
-      await Promise.all(indices.slice(i, i + PRELOAD_BATCH).map(loadFrame));
-    }
-  }
-
-  // Load first 30 frames with priority, then rest in background
-  loadBatch(priorityIndices).then(() => loadBatch(restIndices));
+  // Load chapter 1 immediately, then preload chapter 2 in background
+  preloadChapter(0).then(() => preloadChapter(1));
 }
 
 // ── Scroll → Frame Sync ──────────────────────────────────────
@@ -183,7 +185,9 @@ function setupScrollSync() {
       onComplete: () => {
         currentSnap = index;
         animDone    = true;
-        extendLock(); // start the quiet countdown
+        extendLock();
+        // Preload the chapter after next so it's ready when needed
+        if (index + 2 <= 4) preloadChapter(index + 2);
       },
     });
   }

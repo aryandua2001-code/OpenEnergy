@@ -48,6 +48,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden; /* iOS Safari needs this on html, not just body */
 }
 
 body {
@@ -1569,30 +1570,110 @@ body {
 }
 
 /* ════════════════════════════════════════════ RESPONSIVE ═══ */
+
+/* ── Tablet (≤ 900px) ── */
 @media (max-width: 900px) {
+  /* Nav */
   .nav-links { display: none; }
-  .solutions-grid { grid-template-columns: 1fr; }
-  .tech-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .about-inner { grid-template-columns: 1fr; }
-  .about-visual { display: none; }
-  .form-row { grid-template-columns: 1fr; }
-  .footer-inner { flex-direction: column; gap: 2rem; }
-  .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  .nav-inner { padding: 0 1.25rem; }
+
+  /* Sections — reduce padding */
+  .section-inner { padding: 4rem 1.25rem; }
+  .about-inner   { padding: 4rem 1.25rem; grid-template-columns: 1fr; gap: 2.5rem; }
+  .manu-inner    { padding: 4rem 1.25rem; grid-template-columns: 1fr; gap: 2.5rem; }
+
+  /* Grids → single column */
+  .solutions-grid         { grid-template-columns: 1fr; }
+  .tech-grid              { grid-template-columns: 1fr; gap: 2rem; }
+  .why-grid               { grid-template-columns: 1fr 1fr; }
+  .process-steps          { grid-template-columns: 1fr 1fr; }
+  .rfp-grid               { grid-template-columns: 1fr; gap: 2rem; }
+  .contact-process-strip  { grid-template-columns: 1fr 1fr; }
+  .form-row               { grid-template-columns: 1fr; }
+
+  /* Footer */
+  .footer-inner   { flex-direction: column; gap: 2rem; padding: 3rem 1.25rem; }
+  .footer-links   { gap: 2rem; flex-wrap: wrap; }
+  .footer-bottom  { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.25rem; }
+
+  /* Credibility strip */
+  .cred-inner   { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
   .cred-divider { display: none; }
-  .cred-inner { gap: 2rem; }
-  .why-grid { grid-template-columns: 1fr 1fr; }
-  .manu-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .process-steps { grid-template-columns: 1fr 1fr; }
-  .rfp-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .contact-process-strip { grid-template-columns: 1fr 1fr; }
-  .overlay-panel { padding: 5% 6% 12%; }
+  .cred-item    { min-width: 120px; }
+
+  /* Hide decorative visual */
+  .about-visual { display: none; }
+
+  /* Overlay text */
+  .overlay-panel { padding: 5% 6% 14%; }
+
+  /* Manufacturing */
+  .manu-spec-row { grid-template-columns: 120px 1fr; }
 }
 
+/* ── Mobile (≤ 600px) ── */
 @media (max-width: 600px) {
-  .hero-tagline { font-size: clamp(2rem, 10vw, 3.5rem); }
-  .overlay-heading { font-size: clamp(1.8rem, 8vw, 3rem); }
-  .why-grid { grid-template-columns: 1fr; }
+  /* Root typography */
+  :root { --nav-h: 60px; }
+
+  /* Nav */
+  .nav-logo   { font-size: 1.15rem; }
+  .nav-cta    { padding: 0.45rem 1rem; font-size: 0.8rem; }
+
+  /* Hero cinematic text */
+  .hero-tagline   { font-size: clamp(2.2rem, 11vw, 3.5rem); gap: 0.25em; }
+  .hero-sub       { font-size: 0.9rem; padding: 0 1rem; }
+  .overlay-heading { font-size: clamp(1.6rem, 7vw, 2.5rem); }
+  .overlay-body   { font-size: 0.85rem; }
+  .overlay-panel  { padding: 4% 5% 16%; }
+
+  /* Section headings */
+  .section-heading { font-size: clamp(1.6rem, 6vw, 2.5rem); }
+  .section-inner   { padding: 3rem 1rem; }
+  .about-inner     { padding: 3rem 1rem; }
+  .manu-inner      { padding: 3rem 1rem; }
+
+  /* Credibility — vertical stack */
+  .cred-inner  { flex-direction: column; align-items: center; gap: 1.25rem; }
+  .cred-val    { font-size: 1rem; }
+
+  /* Why grid */
+  .why-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+
+  /* Solutions — spec table smaller */
+  .solution-spec-table th,
+  .solution-spec-table td { font-size: 0.72rem; }
+
+  /* Manufacturing flow — vertical */
+  .manu-flow        { flex-direction: column; }
+  .manu-arrow       { transform: rotate(90deg); text-align: center; }
+  .manu-spec-row    { grid-template-columns: 1fr; gap: 0.25rem; }
+  .manu-spec-row span { font-size: 0.6rem; }
+
+  /* Process steps */
   .process-steps { grid-template-columns: 1fr; }
+  .process-step  { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+  .process-step:last-child { border-bottom: none; }
+
+  /* Founder card */
+  .founder-card { flex-direction: column; }
+  .hiring-card  { flex-direction: column; }
+
+  /* Contact */
+  .rfp-form-wrap         { padding: 1.5rem 1rem; }
+  .rfp-form-foot         { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .rfp-form-foot p       { max-width: 100%; }
   .contact-process-strip { grid-template-columns: 1fr; }
-  .manu-flow { gap: 0; }
+  .cps-item              { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+  .cps-item:last-child   { border-bottom: none; }
+
+  /* Footer */
+  .footer-inner   { padding: 2.5rem 1rem; }
+  .footer-links   { flex-direction: column; gap: 1.5rem; }
+  .footer-tagline { font-size: 0.78rem; }
+  .footer-bottom  { padding: 1rem; font-size: 0.72rem; }
+
+  /* Misc */
+  .stat-divider { display: none; }
+  .stats-inner  { gap: 2rem; }
 }
