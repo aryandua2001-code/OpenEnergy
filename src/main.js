@@ -192,25 +192,13 @@ function setupScrollSync() {
     animDone    = false;
     clearTimeout(quietTimer);
 
-    const total    = section.offsetHeight - window.innerHeight;
-    const target   = section.offsetTop + SNAP_POINTS[index] * total;
-    const startPos = lenis.scroll;
+    const total  = section.offsetHeight - window.innerHeight;
+    const target = section.offsetTop + SNAP_POINTS[index] * total;
 
-    // Drive scroll via GSAP tween + lenis.scrollTo({ immediate: true }).
-    // This bypasses both lenis.scrollTo's internal lerp settling tail
-    // and the slow-end of ease-in-out. power3.out: fast decisive stop,
-    // zero perceptible lag at the landing point.
-    gsap.killTweensOf({ p: 0 });
-    const obj = { p: 0 };
-    gsap.to(obj, {
-      p: 1,
-      duration: 0.75,
-      ease: 'power3.out',
-      onUpdate() {
-        lenis.scrollTo(startPos + (target - startPos) * obj.p, { immediate: true });
-      },
-      onComplete() {
-        lenis.scrollTo(target, { immediate: true }); // snap exactly to target
+    lenis.scrollTo(target, {
+      duration: 0.85,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
+      onComplete: () => {
         currentSnap = index;
         animDone    = true;
         extendLock();
