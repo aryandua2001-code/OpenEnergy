@@ -174,9 +174,9 @@ function setupScrollSync() {
     });
   }
 
-  // Wheel: intercept when inside cinematic, navigate chapter by chapter.
-  // When at the last chapter scrolling down, falls through to Lenis
-  // so the user can reach the page content below.
+  // Wheel: capture phase fires BEFORE Lenis's bubble-phase listener.
+  // stopImmediatePropagation() prevents Lenis from accumulating deltaY
+  // on hard/fast scrolls — that's what caused it to blow past chapters.
   window.addEventListener('wheel', (e) => {
     const total    = section.offsetHeight - window.innerHeight;
     const scrolled = lenis.scroll - section.offsetTop;
@@ -186,13 +186,15 @@ function setupScrollSync() {
 
     if (down && currentSnap < SNAP_POINTS.length - 1) {
       e.preventDefault();
+      e.stopImmediatePropagation(); // block Lenis from seeing this event
       if (!isAnimating) goToChapter(currentSnap + 1);
     } else if (!down && currentSnap > 0) {
       e.preventDefault();
+      e.stopImmediatePropagation();
       if (!isAnimating) goToChapter(currentSnap - 1);
     }
-    // At last snap going down: no preventDefault → Lenis scrolls page normally
-  }, { passive: false });
+    // At last snap going down: no intercept → Lenis scrolls page normally
+  }, { passive: false, capture: true });
 
   // Touch: same logic for mobile swipes
   let touchStartY = 0;
