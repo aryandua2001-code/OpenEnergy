@@ -1,16 +1,20 @@
 // ═══════════════════════════════════════════════════════════
-//  OpenEnergy — Lenis Scroll + Canvas ImageBitmap Cinematic
+//  OpenEnergy — GSAP ScrollTrigger scrub+snap cinematic
 //
-//  Scroll  : Lenis with lerp: 0.12 — natural premium page-scroll
-//            feel, snappier than the original 0.1 so trailing
-//            at chapter-end is visibly shorter.
+//  Scroll   : Native scroll drives ScrollTrigger for the cinematic.
+//             Lenis (stopped during cinematic) handles the page
+//             sections below for premium smooth scroll.
 //
-//  Render  : Canvas + ImageBitmap — each JPG frame pre-decoded
-//            to a GPU-resident ImageBitmap so drawImage is 3×
-//            faster than with HTMLImageElement.
+//  Frames   : WebP (53% smaller than JPG) + img.decode() forces
+//             the browser to decompress BEFORE the frame is needed,
+//             so drawImage() is instant — no JIT decode stutter.
+//
+//  Snap     : ScrollTrigger snap snaps to chapter boundaries via
+//             GSAP's own easing engine — no competing scroll
+//             systems, no lerp settling tail.
 // ═══════════════════════════════════════════════════════════
 
-// Prevent browser from restoring scroll position on reload
+// Always start from top on reload
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
@@ -22,13 +26,12 @@ import '/src/style.css';
 gsap.registerPlugin(ScrollTrigger);
 
 // ── Config ──────────────────────────────────────────────────
-const FRAME_COUNT      = 240;
-const FRAME_PATH       = '/frames';
-const FRAME_EXT        = 'jpg';
-const PRELOAD_BATCH    = 10;
-const FRAMES_PER_CHAPTER = 48; // 240 / 5 chapters
+const FRAME_COUNT        = 240;
+const FRAME_PATH         = '/frames';
+const FRAME_EXT          = 'webp';   // WebP: 53% smaller, faster decode
+const PRELOAD_BATCH      = 10;
+const FRAMES_PER_CHAPTER = 48;       // 240 / 5 chapters
 
-// Chapter boundaries (0–1 scroll progress)
 const CHAPTERS = [
   { start: 0.10, end: 0.30 },
   { start: 0.30, end: 0.50 },
@@ -38,21 +41,19 @@ const CHAPTERS = [
 ];
 
 // ── DOM ─────────────────────────────────────────────────────
-const navbar = document.getElementById('navbar');
-const canvas        = document.getElementById('energy-canvas');
-const ctx           = canvas.getContext('2d', { alpha: false, desynchronized: true });
-const overlays      = document.querySelectorAll('.overlay-panel');
+const navbar   = document.getElementById('navbar');
+const canvas   = document.getElementById('energy-canvas');
+const ctx      = canvas.getContext('2d', { alpha: false, desynchronized: true });
+const overlays = document.querySelectorAll('.overlay-panel');
 
 // ── State ────────────────────────────────────────────────────
-// bitmaps[i] = GPU-decoded ImageBitmap — drawImage is ~3× faster
-// than drawing an HTMLImageElement because no per-draw decode.
 const bitmaps    = new Array(FRAME_COUNT);
 let loadedCount  = 0;
 let currentFrame = 0;
 
-// ── Canvas — retina-aware resize + cover-fit draw ────────────
+// ── Canvas — retina-aware, cover-fit ────────────────────────
 function resizeCanvas() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap at 2× — 3× retina = 9× memory
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w   = window.innerWidth;
   const h   = window.innerHeight;
   canvas.width        = Math.round(w * dpr);
@@ -66,40 +67,37 @@ function resizeCanvas() {
 }
 
 function drawFrame(index) {
-  // If this frame isn't loaded yet, find the nearest available one
-  // so the canvas never goes blank on slow connections.
-  let bmp = bitmaps[index];
-  if (!bmp) {
+  let img = bitmaps[index];
+  // Fallback to nearest available frame so canvas never goes blank
+  if (!img) {
     for (let d = 1; d < 48; d++) {
-      if (bitmaps[index - d]) { bmp = bitmaps[index - d]; break; }
-      if (bitmaps[index + d]) { bmp = bitmaps[index + d]; break; }
+      if (bitmaps[index - d]) { img = bitmaps[index - d]; break; }
+      if (bitmaps[index + d]) { img = bitmaps[index + d]; break; }
     }
   }
-  if (!bmp) return;
+  if (!img) return;
+
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const cw  = canvas.width  / dpr;
   const ch  = canvas.height / dpr;
-  const iw  = bmp.width  || bmp.naturalWidth  || 1920;
-  const ih  = bmp.height || bmp.naturalHeight || 1080;
+  const iw  = img.naturalWidth  || 1920;
+  const ih  = img.naturalHeight || 1080;
   const s   = Math.max(cw / iw, ch / ih);
-  ctx.drawImage(bmp, (cw - iw * s) / 2, (ch - ih * s) / 2, iw * s, ih * s);
+  ctx.drawImage(img, (cw - iw * s) / 2, (ch - ih * s) / 2, iw * s, ih * s);
 }
 
 window.addEventListener('resize', resizeCanvas, { passive: true });
 
-// ── Frame loading with ImageBitmap ───────────────────────────
-// Lazy by chapter: only load chapter 1 on start (~13 MB instead of 67 MB).
-// Each chapter's next chapter is preloaded in the background while the
-// user is reading the current chapter text — so frames are always ready.
+// ── Frame loading — WebP + img.decode() ──────────────────────
+// img.decode() forces the browser to decompress the image into
+// raw pixel data BEFORE it's needed. drawImage() then copies
+// already-decoded pixels — zero JIT decode stutter on scroll.
 async function loadFrame(index) {
-  if (bitmaps[index]) return; // already loaded
+  if (bitmaps[index]) return;
   return new Promise((resolve) => {
-    const img    = new Image();
-    img.decoding = 'async';
-    img.onload = () => {
-      // Store as plain HTMLImageElement — avoids createImageBitmap() which
-      // decodes JPEGs into ~8MB uncompressed GPU buffers each, totalling
-      // ~1.9GB on 240 frames and crashing iOS Safari on phones.
+    const img = new Image();
+    img.onload = async () => {
+      try { await img.decode(); } catch (_) {}  // pre-decode into memory
       bitmaps[index] = img;
       loadedCount++;
       if (index === 0) drawFrame(0);
@@ -124,9 +122,7 @@ function preloadChapter(chapterIndex) {
 }
 
 function preloadFrames() {
-  // Load chapters 0+1 immediately (96 frames, ~27MB) — covers the first
-  // two chapters the user will see before any scroll interaction.
-  // Chapters 2–4 load lazily in the background after that.
+  // Load chapter 0 first, then chain through 1–4 in background
   preloadChapter(0)
     .then(() => preloadChapter(1))
     .then(() => preloadChapter(2))
@@ -134,121 +130,65 @@ function preloadFrames() {
     .then(() => preloadChapter(4));
 }
 
-// ── Scroll → Frame Sync ──────────────────────────────────────
+// ── Scroll + Frame Sync ──────────────────────────────────────
 function setupScrollSync() {
   const section     = document.getElementById('cinematic-section');
   const heroOverlay = document.getElementById('hero-overlay');
 
-  // lerp: 0.12 — slightly snappier than the original 0.1 so the
-  // trailing tail at the end of each chapter is visibly shorter.
-  const lenis = new Lenis({ lerp: 0.12, autoRaf: false });
+  // Lenis for smooth scroll on page sections below the cinematic.
+  // Stopped initially — native scroll drives the cinematic section.
+  // Started when the user passes the cinematic (ScrollTrigger.onLeave).
+  const lenis = new Lenis({ lerp: 0.08, autoRaf: false });
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
   lenis.on('scroll', ScrollTrigger.update);
+  lenis.stop();
 
-  let scrollProgress = 0;
-
-  lenis.on('scroll', ({ scroll }) => {
-    const total    = section.offsetHeight - window.innerHeight;
-    const scrolled = scroll - section.offsetTop;
-    const progress = Math.max(0, Math.min(1, scrolled / total));
-    scrollProgress = progress;
-
-    const fi = Math.min(FRAME_COUNT - 1, Math.floor(progress * FRAME_COUNT));
-    if (fi !== currentFrame) { currentFrame = fi; drawFrame(fi); }
-
-    if (heroOverlay) {
-      heroOverlay.style.opacity       = progress < 0.10 ? String(1 - progress / 0.10) : '0';
-      heroOverlay.style.pointerEvents = progress < 0.10 ? 'auto' : 'none';
-    }
-
-    CHAPTERS.forEach((ch, i) => {
-      overlays[i].classList.toggle('active', progress >= ch.start && progress < ch.end);
-    });
-    if (progress >= 0.90) overlays[4].classList.add('active');
-  });
-
-  // ── Chapter-by-chapter navigation ───────────────────────────
-  // One scroll gesture = entire chapter plays to its end, then locks.
-  // Next scroll = next chapter. Works in both directions.
-  const SNAP_POINTS = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
-  let currentSnap = 0;
-  let isAnimating = false;
-  let animDone    = false;   // animation finished but waiting for momentum to die
-  let quietTimer  = null;
-
-  // Unlock only after 400ms of silence since the last intercepted wheel event.
-  // This absorbs OS momentum tail that fires after a hard scroll.
-  function extendLock() {
-    clearTimeout(quietTimer);
-    quietTimer = setTimeout(() => {
-      if (animDone) { isAnimating = false; animDone = false; }
-    }, 400);
-  }
-
-  function goToChapter(index) {
-    if (isAnimating) return;
-    isAnimating = true;
-    animDone    = false;
-    clearTimeout(quietTimer);
-
-    const total  = section.offsetHeight - window.innerHeight;
-    const target = section.offsetTop + SNAP_POINTS[index] * total;
-
-    lenis.scrollTo(target, {
-      duration: 0.85,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
-      onComplete: () => {
-        currentSnap = index;
-        animDone    = true;
-        extendLock();
-        if (index + 2 <= 4) preloadChapter(index + 2);
+  // ── Hero fade ─────────────────────────────────────────────
+  if (heroOverlay) {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: '+=8%',
+      scrub: true,
+      onUpdate: ({ progress }) => {
+        heroOverlay.style.opacity       = String(1 - progress);
+        heroOverlay.style.pointerEvents = progress > 0.5 ? 'none' : 'auto';
       },
     });
   }
 
-  // Capture phase fires before Lenis — stopImmediatePropagation keeps
-  // Lenis from accumulating deltaY on fast scrolls.
-  window.addEventListener('wheel', (e) => {
-    const total    = section.offsetHeight - window.innerHeight;
-    const scrolled = lenis.scroll - section.offsetTop;
-    if (scrolled < -60 || scrolled > total + 60) return;
+  // ── Cinematic frame sequence + chapter snap ───────────────
+  // scrub: 0.5  → frames lag the scroll position by 0.5 s,
+  //              creating the intentional cinematic trailing feel.
+  // snap        → when scroll momentum stops, GSAP eases to the
+  //              nearest chapter boundary with power3.out — no
+  //              Lenis lerp, no competing scroll system.
+  ScrollTrigger.create({
+    trigger: section,
+    start:   'top top',
+    end:     'bottom bottom',
+    scrub:   0.5,
+    snap: {
+      snapTo:   [0, 0.2, 0.4, 0.6, 0.8, 1.0],
+      duration: { min: 0.3, max: 0.7 },
+      ease:     'power3.out',
+      delay:    0.05,
+      inertia:  false,
+    },
+    onUpdate(self) {
+      const fi = Math.min(FRAME_COUNT - 1, Math.floor(self.progress * FRAME_COUNT));
+      if (fi !== currentFrame) { currentFrame = fi; drawFrame(fi); }
 
-    const down = e.deltaY > 0;
-
-    if (down && currentSnap < SNAP_POINTS.length - 1) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      if (!isAnimating) goToChapter(currentSnap + 1);
-      else if (animDone)  extendLock(); // momentum after animation — reset quiet timer
-    } else if (!down && currentSnap > 0) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      if (!isAnimating) goToChapter(currentSnap - 1);
-      else if (animDone)  extendLock();
-    }
-  }, { passive: false, capture: true });
-
-  // Touch: same logic for mobile swipes
-  let touchStartY = 0;
-  window.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  window.addEventListener('touchend', (e) => {
-    const total    = section.offsetHeight - window.innerHeight;
-    const scrolled = lenis.scroll - section.offsetTop;
-    if (scrolled < -60 || scrolled > total + 60) return;
-
-    const delta = touchStartY - e.changedTouches[0].clientY;
-    if (Math.abs(delta) < 25) return; // ignore tiny taps
-
-    if (delta > 0 && currentSnap < SNAP_POINTS.length - 1) {
-      if (!isAnimating) goToChapter(currentSnap + 1);
-    } else if (delta < 0 && currentSnap > 0) {
-      if (!isAnimating) goToChapter(currentSnap - 1);
-    }
-  }, { passive: true });
+      CHAPTERS.forEach((ch, i) => {
+        overlays[i].classList.toggle('active', self.progress >= ch.start && self.progress < ch.end);
+      });
+      if (self.progress >= 0.90) overlays[4].classList.add('active');
+    },
+    // Unlock Lenis once the user scrolls past the cinematic
+    onLeave()      { lenis.start(); ScrollTrigger.refresh(); },
+    onEnterBack()  { lenis.stop();  },
+  });
 }
 
 // ── Navbar ───────────────────────────────────────────────────
@@ -258,7 +198,7 @@ function setupNavbar() {
   }, { passive: true });
 }
 
-// ── Hero entrance animation ──────────────────────────────────
+// ── Hero entrance ────────────────────────────────────────────
 function animateHero() {
   const words = document.querySelectorAll('.tagline-word');
   const sub   = document.getElementById('hero-sub');
@@ -320,8 +260,8 @@ function startAnimations() {
 
 function init() {
   resizeCanvas();
-  preloadFrames();   // silent background load
-  startAnimations(); // hero + scroll start immediately
+  preloadFrames();
+  startAnimations();
 }
 
 if (document.readyState === 'loading') {
