@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OpenEnergy — Pioneering solar energy and battery storage solutions for a sustainable future. Experience the journey from sunlight to stored power." />
+  <title>OpenEnergy — Power the Future</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════ PRELOADER ══ -->
+  <div id="preloader" aria-label="Loading OpenEnergy experience">
+    <div class="preloader-inner">
+      <div class="preloader-logo">
+        <span class="logo-open">Open</span><span class="logo-energy">Energy</span>
+      </div>
+      <div class="preloader-bar">
+        <div class="preloader-fill" id="preloader-fill"></div>
+      </div>
+      <p class="preloader-text" id="preloader-text">Initializing experience...</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ NAV ════════ -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" id="nav-logo-link">
+        <span class="logo-open">Open</span><span class="logo-energy">Energy</span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#solutions" id="nav-solutions">Solutions</a></li>
+        <li><a href="#technology" id="nav-technology">Technology</a></li>
+        <li><a href="#about" id="nav-about">About</a></li>
+        <li><a href="#contact" id="nav-contact">Contact</a></li>
+      </ul>
+      <a href="#contact" class="nav-cta" id="nav-cta-btn">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════ CINEMATIC SCROLL SECTION ══════ -->
+  <section id="cinematic-section" aria-label="Energy journey visualization">
+
+    <!-- Sticky video container -->
+    <div id="video-sticky-wrapper">
+      <canvas id="energy-canvas" aria-hidden="true"></canvas>
+
+
+      <!-- Hero Overlay (Initial view over the first frame) -->
+      <div class="hero-overlay" id="hero-overlay">
+        <div class="hero-tagline" id="hero-tagline">
+          <span class="tagline-word">Powering</span>
+          <span class="tagline-word gradient-text">Tomorrow</span>
+          <span class="tagline-word">Today</span>
+        </div>
+        <p class="hero-sub" id="hero-sub">Pioneering the future of solar energy and intelligent battery storage solutions</p>
+        <div class="hero-scroll-hint" id="hero-scroll-hint">
+          <span>Scroll to explore</span>
+          <div class="scroll-arrow"></div>
+        </div>
+      </div>
+
+      <!-- ── Overlay panels (one per scroll chapter) ── -->
+      <div class="overlay-panel" id="overlay-0" data-chapter="0">
+        <div class="overlay-content">
+          <p class="overlay-eyebrow">Chapter 01</p>
+          <h2 class="overlay-heading">Harnessing the<br /><span class="gradient-text">Power of the Sun</span></h2>
+          <p class="overlay-body">Vast solar arrays capture the sun's limitless energy across thousands of photovoltaic panels engineered for maximum efficiency.</p>
+        </div>
+      </div>
+
+      <div class="overlay-panel" id="overlay-1" data-chapter="1">
+        <div class="overlay-content">
+          <p class="overlay-eyebrow">Chapter 02</p>
+          <h2 class="overlay-heading">Sunlight Becomes<br /><span class="gradient-text">Clean Electricity</span></h2>
+          <p class="overlay-body">Advanced photovoltaic cells convert sunlight into electric current at peak quantum efficiency — visible as a cascade of luminous energy pulses.</p>
+        </div>
+      </div>
+
+      <div class="overlay-panel" id="overlay-2" data-chapter="2">
+        <div class="overlay-content">
+          <p class="overlay-eyebrow">Chapter 03</p>
+          <h2 class="overlay-heading">Delivering Energy<br /><span class="gradient-text">Across the Grid</span></h2>
+          <p class="overlay-body">High-voltage transmission lines carry the harvested electricity across the landscape in a continuous, pulsing flow of clean power.</p>
+        </div>
+      </div>
+
+      <div class="overlay-panel" id="overlay-3" data-chapter="3">
+        <div class="overlay-content">
+          <p class="overlay-eyebrow">Chapter 04</p>
+          <h2 class="overlay-heading">Intelligent<br /><span class="gradient-text">Energy Storage</span></h2>
+          <p class="overlay-body">State-of-the-art Battery Energy Storage Systems absorb, manage, and dispatch power precisely when and where it's needed most.</p>
+        </div>
+      </div>
+
+      <div class="overlay-panel" id="overlay-4" data-chapter="4">
+        <div class="overlay-content overlay-content--center">
+          <p class="overlay-eyebrow">OpenEnergy</p>
+          <h2 class="overlay-heading overlay-heading--large">The Future<br />of Energy<br /><span class="gradient-text">is Here</span></h2>
+          <a href="#contact" class="cta-button" id="hero-cta-btn">
+            <span>Explore Our Solutions</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /video-sticky-wrapper -->
+
+    <!-- Scroll spacer — 5 blocks of 100vh each for snapping -->
+    <div id="scroll-spacer" aria-hidden="true">
+      <div class="snap-point"></div>
+      <div class="snap-point"></div>
+      <div class="snap-point"></div>
+      <div class="snap-point"></div>
+      <div class="snap-point"></div>
+    </div>
+
+  </section>
+
+  <!-- ════════════════════════ STATS STRIP ══════════════════ -->
+  <section id="stats" aria-label="Key statistics">
+    <div class="stats-inner">
+      <div class="stat-item" id="stat-0">
+        <span class="stat-number" data-target="500">0</span><span class="stat-unit">MW+</span>
+        <p class="stat-label">Solar Capacity Deployed</p>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-item" id="stat-1">
+        <span class="stat-number" data-target="2">0</span><span class="stat-unit">GWh</span>
+        <p class="stat-label">Battery Storage Installed</p>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-item" id="stat-2">
+        <span class="stat-number" data-target="40">0</span><span class="stat-unit">+</span>
+        <p class="stat-label">Countries Powered</p>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-item" id="stat-3">
+        <span class="stat-number" data-target="98">0</span><span class="stat-unit">%</span>
+        <p class="stat-label">System Uptime</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ SOLUTIONS ════════════════════ -->
+  <section id="solutions" aria-label="Our solutions">
+    <div class="section-inner">
+      <p class="section-eyebrow">What We Do</p>
+      <h2 class="section-heading">Complete Energy Ecosystem</h2>
+      <p class="section-sub">From generation to storage, we deliver end-to-end renewable energy infrastructure.</p>
+
+      <div class="solutions-grid">
+        <div class="solution-card" id="solution-solar">
+          <div class="solution-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </div>
+          <h3 class="solution-title">Solar Parks</h3>
+          <p class="solution-desc">Utility-scale photovoltaic installations engineered for maximum yield and long-term performance across diverse terrains.</p>
+          <span class="solution-link">Learn more →</span>
+        </div>
+
+        <div class="solution-card solution-card--featured" id="solution-storage">
+          <div class="solution-badge">Featured</div>
+          <div class="solution-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" x2="12" y1="12" y2="16"/><line x1="10" x2="14" y1="14" y2="14"/></svg>
+          </div>
+          <h3 class="solution-title">Battery Energy Storage</h3>
+          <p class="solution-desc">Grid-scale BESS solutions that store surplus renewable energy and dispatch it reliably — stabilizing the grid 24/7.</p>
+          <span class="solution-link">Learn more →</span>
+        </div>
+
+        <div class="solution-card" id="solution-grid">
+          <div class="solution-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12"/><path d="M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M15 6a9 9 0 0 1-9 9"/><path d="M18 15v6"/><path d="M21 18h-6"/></svg>
+          </div>
+          <h3 class="solution-title">Grid Integration</h3>
+          <p class="solution-desc">Smart grid management and transmission infrastructure that seamlessly connects renewable generation to existing networks.</p>
+          <span class="solution-link">Learn more →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ TECHNOLOGY ═══════════════════ -->
+  <section id="technology" aria-label="Our technology">
+    <div class="section-inner">
+      <p class="section-eyebrow">Technology</p>
+      <h2 class="section-heading">Built for the <span class="gradient-text">Next Decade</span></h2>
+      <div class="tech-grid">
+        <div class="tech-item" id="tech-0">
+          <div class="tech-number gradient-text">01</div>
+          <h3 class="tech-title">High-Efficiency PV Cells</h3>
+          <p class="tech-desc">Bifacial monocrystalline silicon panels with anti-reflective coatings achieving up to 23% efficiency.</p>
+        </div>
+        <div class="tech-item" id="tech-1">
+          <div class="tech-number gradient-text">02</div>
+          <h3 class="tech-title">Liquid-Cooled BESS</h3>
+          <p class="tech-desc">Advanced thermal management in our battery systems ensures safety, longevity, and consistent performance in any climate.</p>
+        </div>
+        <div class="tech-item" id="tech-2">
+          <div class="tech-number gradient-text">03</div>
+          <h3 class="tech-title">AI-Powered Grid Dispatch</h3>
+          <p class="tech-desc">Machine learning algorithms predict demand curves and optimize energy dispatch in real time, minimizing waste.</p>
+        </div>
+        <div class="tech-item" id="tech-3">
+          <div class="tech-number gradient-text">04</div>
+          <h3 class="tech-title">Remote Monitoring</h3>
+          <p class="tech-desc">24/7 SCADA and IoT-based asset monitoring with predictive maintenance alerts and live performance dashboards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ ABOUT ════════════════════════ -->
+  <section id="about" aria-label="About OpenEnergy">
+    <div class="about-inner">
+      <div class="about-text">
+        <p class="section-eyebrow">About Us</p>
+        <h2 class="section-heading">Energy Independence<br />at <span class="gradient-text">Global Scale</span></h2>
+        <p class="about-body">OpenEnergy is a leading renewable energy company dedicated to accelerating the world's transition to clean power. We design, build, and operate utility-scale solar parks and battery energy storage systems that deliver reliable, affordable electricity to communities and industries worldwide.</p>
+        <p class="about-body">Founded on the principle that access to clean energy is a fundamental right, we engineer solutions that are as resilient as they are sustainable.</p>
+        <a href="#contact" class="cta-button cta-button--outline" id="about-cta-btn">
+          <span>Our Story</span>
+        </a>
+      </div>
+      <div class="about-visual" aria-hidden="true">
+        <div class="about-glow-orb"></div>
+        <div class="about-ring about-ring--1"></div>
+        <div class="about-ring about-ring--2"></div>
+        <div class="about-ring about-ring--3"></div>
+        <div class="about-center-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <defs>
+              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0097B2"/>
+                <stop offset="100%" stop-color="#7ED957"/>
+              </linearGradient>
+            </defs>
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ CONTACT ══════════════════════ -->
+  <section id="contact" aria-label="Contact us">
+    <div class="section-inner">
+      <p class="section-eyebrow">Get In Touch</p>
+      <h2 class="section-heading">Let's Build the<br /><span class="gradient-text">Future Together</span></h2>
+      <p class="section-sub">Ready to deploy renewable energy infrastructure? Our team of experts is here to help you every step of the way.</p>
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-name">Full Name</label>
+            <input type="text" id="contact-name" name="name" placeholder="Your full name" required />
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Email Address</label>
+            <input type="email" id="contact-email" name="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="contact-subject">Subject</label>
+          <input type="text" id="contact-subject" name="subject" placeholder="How can we help?" />
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" rows="5" placeholder="Tell us about your project..." required></textarea>
+        </div>
+        <button type="submit" class="cta-button" id="contact-submit-btn">
+          <span>Send Message</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ FOOTER ═══════════════════════ -->
+  <footer id="footer" aria-label="Site footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-open">Open</span><span class="logo-energy">Energy</span>
+        <p class="footer-tagline">Powering Tomorrow, Today.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Solutions</h4>
+          <ul>
+            <li><a href="#solutions">Solar Parks</a></li>
+            <li><a href="#solutions">Battery Storage</a></li>
+            <li><a href="#solutions">Grid Integration</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#technology">Technology</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 OpenEnergy. All rights reserved.</p>
+      <p>Built for a sustainable future.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
