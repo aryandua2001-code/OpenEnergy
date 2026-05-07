@@ -154,12 +154,25 @@ function setupScrollSync() {
   // One scroll gesture = entire chapter plays to its end, then locks.
   // Next scroll = next chapter. Works in both directions.
   const SNAP_POINTS = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
-  let currentSnap  = 0;   // index of the snap point we're sitting on
-  let isAnimating  = false;
+  let currentSnap = 0;
+  let isAnimating = false;
+  let animDone    = false;   // animation finished but waiting for momentum to die
+  let quietTimer  = null;
+
+  // Unlock only after 400ms of silence since the last intercepted wheel event.
+  // This absorbs OS momentum tail that fires after a hard scroll.
+  function extendLock() {
+    clearTimeout(quietTimer);
+    quietTimer = setTimeout(() => {
+      if (animDone) { isAnimating = false; animDone = false; }
+    }, 400);
+  }
 
   function goToChapter(index) {
     if (isAnimating) return;
     isAnimating = true;
+    animDone    = false;
+    clearTimeout(quietTimer);
 
     const total  = section.offsetHeight - window.innerHeight;
     const target = section.offsetTop + SNAP_POINTS[index] * total;
@@ -169,31 +182,32 @@ function setupScrollSync() {
       easing: (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
       onComplete: () => {
         currentSnap = index;
-        setTimeout(() => { isAnimating = false; }, 80);
+        animDone    = true;
+        extendLock(); // start the quiet countdown
       },
     });
   }
 
-  // Wheel: capture phase fires BEFORE Lenis's bubble-phase listener.
-  // stopImmediatePropagation() prevents Lenis from accumulating deltaY
-  // on hard/fast scrolls — that's what caused it to blow past chapters.
+  // Capture phase fires before Lenis — stopImmediatePropagation keeps
+  // Lenis from accumulating deltaY on fast scrolls.
   window.addEventListener('wheel', (e) => {
     const total    = section.offsetHeight - window.innerHeight;
     const scrolled = lenis.scroll - section.offsetTop;
-    if (scrolled < -60 || scrolled > total + 60) return; // outside cinematic
+    if (scrolled < -60 || scrolled > total + 60) return;
 
     const down = e.deltaY > 0;
 
     if (down && currentSnap < SNAP_POINTS.length - 1) {
       e.preventDefault();
-      e.stopImmediatePropagation(); // block Lenis from seeing this event
+      e.stopImmediatePropagation();
       if (!isAnimating) goToChapter(currentSnap + 1);
+      else if (animDone)  extendLock(); // momentum after animation — reset quiet timer
     } else if (!down && currentSnap > 0) {
       e.preventDefault();
       e.stopImmediatePropagation();
       if (!isAnimating) goToChapter(currentSnap - 1);
+      else if (animDone)  extendLock();
     }
-    // At last snap going down: no intercept → Lenis scrolls page normally
   }, { passive: false, capture: true });
 
   // Touch: same logic for mobile swipes
