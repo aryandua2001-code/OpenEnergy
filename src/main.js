@@ -150,39 +150,70 @@ function setupScrollSync() {
     if (progress >= 0.90) overlays[4].classList.add('active');
   });
 
-  // Chapter snap — when scroll momentum fully stops, snap to the
-  // nearest chapter boundary so the canvas always rests on a clean frame.
+  // ── Chapter-by-chapter navigation ───────────────────────────
+  // One scroll gesture = entire chapter plays to its end, then locks.
+  // Next scroll = next chapter. Works in both directions.
   const SNAP_POINTS = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
-  let isSnapping = false;
+  let currentSnap  = 0;   // index of the snap point we're sitting on
+  let isAnimating  = false;
 
-  function snapToNearest() {
-    if (isSnapping) return;
-    const total    = section.offsetHeight - window.innerHeight;
-    const scrolled = lenis.scroll - section.offsetTop;
-    if (scrolled < -window.innerHeight || scrolled > total + window.innerHeight) return;
+  function goToChapter(index) {
+    if (isAnimating) return;
+    isAnimating = true;
 
-    const nearest = SNAP_POINTS.reduce((p, c) =>
-      Math.abs(c - scrollProgress) < Math.abs(p - scrollProgress) ? c : p
-    );
-    const target = section.offsetTop + nearest * total;
-    if (Math.abs(lenis.scroll - target) < 8) return;
+    const total  = section.offsetHeight - window.innerHeight;
+    const target = section.offsetTop + SNAP_POINTS[index] * total;
 
-    isSnapping = true;
     lenis.scrollTo(target, {
-      duration: 0.75,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
-      onComplete: () => setTimeout(() => { isSnapping = false; }, 50),
+      duration: 1.5,
+      easing: (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+      onComplete: () => {
+        currentSnap = index;
+        setTimeout(() => { isAnimating = false; }, 80);
+      },
     });
   }
 
-  if ('onscrollend' in window) {
-    window.addEventListener('scrollend', snapToNearest);
-  } else {
-    let t;
-    window.addEventListener('scroll', () => {
-      clearTimeout(t); t = setTimeout(snapToNearest, 140);
-    }, { passive: true });
-  }
+  // Wheel: intercept when inside cinematic, navigate chapter by chapter.
+  // When at the last chapter scrolling down, falls through to Lenis
+  // so the user can reach the page content below.
+  window.addEventListener('wheel', (e) => {
+    const total    = section.offsetHeight - window.innerHeight;
+    const scrolled = lenis.scroll - section.offsetTop;
+    if (scrolled < -60 || scrolled > total + 60) return; // outside cinematic
+
+    const down = e.deltaY > 0;
+
+    if (down && currentSnap < SNAP_POINTS.length - 1) {
+      e.preventDefault();
+      if (!isAnimating) goToChapter(currentSnap + 1);
+    } else if (!down && currentSnap > 0) {
+      e.preventDefault();
+      if (!isAnimating) goToChapter(currentSnap - 1);
+    }
+    // At last snap going down: no preventDefault → Lenis scrolls page normally
+  }, { passive: false });
+
+  // Touch: same logic for mobile swipes
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  window.addEventListener('touchend', (e) => {
+    const total    = section.offsetHeight - window.innerHeight;
+    const scrolled = lenis.scroll - section.offsetTop;
+    if (scrolled < -60 || scrolled > total + 60) return;
+
+    const delta = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(delta) < 25) return; // ignore tiny taps
+
+    if (delta > 0 && currentSnap < SNAP_POINTS.length - 1) {
+      if (!isAnimating) goToChapter(currentSnap + 1);
+    } else if (delta < 0 && currentSnap > 0) {
+      if (!isAnimating) goToChapter(currentSnap - 1);
+    }
+  }, { passive: true });
 }
 
 // ── Navbar ───────────────────────────────────────────────────
