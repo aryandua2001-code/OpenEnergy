@@ -122,15 +122,12 @@ function setupScrollSync() {
   gsap.ticker.lagSmoothing(0);
   lenis.on('scroll', ScrollTrigger.update);
 
-  let scrollProgress = 0;
+  function renderProgress(rawProgress) {
+    const progress = Math.max(0, Math.min(1, rawProgress));
 
-  lenis.on('scroll', ({ scroll }) => {
-    const total    = section.offsetHeight - window.innerHeight;
-    const scrolled = scroll - section.offsetTop;
-    const progress = Math.max(0, Math.min(1, scrolled / total));
-    scrollProgress = progress;
-
-    const fi = Math.min(FRAME_COUNT - 1, Math.floor(progress * FRAME_COUNT));
+    // Math.round avoids a one-frame visual stall at chapter boundaries
+    // caused by fractional progress hovering just below the final frame.
+    const fi = Math.min(FRAME_COUNT - 1, Math.round(progress * (FRAME_COUNT - 1)));
     if (fi !== currentFrame) { currentFrame = fi; drawFrame(fi); }
 
     if (heroOverlay) {
@@ -142,6 +139,13 @@ function setupScrollSync() {
       overlays[i].classList.toggle('active', progress >= ch.start && progress < ch.end);
     });
     if (progress >= 0.90) overlays[4].classList.add('active');
+  }
+
+  lenis.on('scroll', ({ scroll }) => {
+    const total    = section.offsetHeight - window.innerHeight;
+    const scrolled = scroll - section.offsetTop;
+    const progress = Math.max(0, Math.min(1, scrolled / total));
+    renderProgress(progress);
   });
 
   // ── Chapter-by-chapter navigation ───────────────────────────
@@ -150,6 +154,7 @@ function setupScrollSync() {
   let isAnimating = false;
   let animDone    = false;
   let quietTimer  = null;
+  let activeTween = null;
 
   function extendLock() {
     clearTimeout(quietTimer);
@@ -163,14 +168,30 @@ function setupScrollSync() {
     isAnimating = true;
     animDone    = false;
     clearTimeout(quietTimer);
+    if (activeTween) activeTween.kill();
 
     const total  = section.offsetHeight - window.innerHeight;
     const target = section.offsetTop + SNAP_POINTS[index] * total;
+    const startProgress  = SNAP_POINTS[currentSnap];
+    const targetProgress = SNAP_POINTS[index];
+    const state = { progress: startProgress };
 
-    lenis.scrollTo(target, {
-      duration: 0.85,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
+    // Make sure the destination chapter is decoding while the animation starts.
+    preloadChapter(Math.max(0, index - 1));
+    preloadChapter(index);
+    if (index + 1 <= 4) preloadChapter(index + 1);
+
+    // Visual playback is deliberately constant-speed. The previous scrollTo()
+    // ease slowed toward zero velocity at the end, which looked like a hitch
+    // even when the browser was performing correctly.
+    activeTween = gsap.to(state, {
+      progress: targetProgress,
+      duration: 0.72,
+      ease: 'none',
+      onUpdate: () => renderProgress(state.progress),
       onComplete: () => {
+        renderProgress(targetProgress);
+        lenis.scrollTo(target, { immediate: true });
         currentSnap = index;
         animDone    = true;
         extendLock();
@@ -206,6 +227,27 @@ function setupScrollSync() {
   window.addEventListener('touchstart', (e) => {
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    const total    = section.offsetHeight - window.innerHeight;
+    const scrolled = lenis.scroll - section.offsetTop;
+    if (scrolled < -60 || scrolled > total + 60) return;
+
+    const delta = touchStartY - e.touches[0].clientY;
+    if (Math.abs(delta) < 8) return;
+
+    const down = delta > 0;
+    const shouldLock =
+      isAnimating ||
+      (down && currentSnap < SNAP_POINTS.length - 1) ||
+      (!down && currentSnap > 0);
+
+    if (shouldLock) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (animDone) extendLock();
+    }
+  }, { passive: false, capture: true });
 
   window.addEventListener('touchend', (e) => {
     const total    = section.offsetHeight - window.innerHeight;

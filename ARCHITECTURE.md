@@ -103,9 +103,12 @@ Snap points: [0, 0.2, 0.4, 0.6, 0.8, 1.0]  (one per chapter boundary)
 
 1. **Wheel listener** (`capture: true`, `passive: false`) fires before Lenis
 2. `e.stopImmediatePropagation()` prevents Lenis from accumulating deltaY on hard scrolls
-3. `goToChapter(index)` → `lenis.scrollTo(target, { duration: 0.85, easing: power3.out })`
-4. `extendLock()` — resets a 400ms quiet timer on every intercepted wheel event; only sets `isAnimating = false` after 400ms of silence (absorbs OS momentum tail from hard scrolls)
-5. When at last snap going down → no intercept → Lenis handles normal page scroll
+3. `goToChapter(index)` plays the canvas frames with a GSAP time-based tween from the current snap progress to the target snap progress (`duration: 0.72`, `ease: 'none'`)
+4. At completion, Lenis is moved to the exact snap pixel with `lenis.scrollTo(target, { immediate: true })`. This keeps the scroll state correct without tying the final visual frames to a slow easing tail.
+5. `extendLock()` — resets a 400ms quiet timer on every intercepted wheel/touch event; only sets `isAnimating = false` after 400ms of silence (absorbs OS momentum tail from hard scrolls)
+6. When at last snap going down → no intercept → Lenis handles normal page scroll
+
+**Why this shape:** earlier versions animated the real scroll position with `lenis.scrollTo(duration + easing)`. Even when technically smooth, the easing approached zero velocity near the target, so the image sequence appeared to lag for the last fraction of a second. The current version decouples visual frame playback from scroll easing: frames advance at constant speed, then the real scroll position is snapped into place invisibly while the sticky hero is already on the correct final frame.
 
 ### Canvas rendering
 - DPR capped at 2× (`Math.min(devicePixelRatio, 2)`) — prevents 3× retina creating 9× canvas memory (iOS crash fix)
