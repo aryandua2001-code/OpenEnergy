@@ -192,17 +192,28 @@ function setupScrollSync() {
     animDone    = false;
     clearTimeout(quietTimer);
 
-    const total  = section.offsetHeight - window.innerHeight;
-    const target = section.offsetTop + SNAP_POINTS[index] * total;
+    const total    = section.offsetHeight - window.innerHeight;
+    const target   = section.offsetTop + SNAP_POINTS[index] * total;
+    const startPos = lenis.scroll;
 
-    lenis.scrollTo(target, {
-      duration: 0.9,
-      easing: (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
-      onComplete: () => {
+    // Drive scroll via GSAP tween + lenis.scrollTo({ immediate: true }).
+    // This bypasses both lenis.scrollTo's internal lerp settling tail
+    // and the slow-end of ease-in-out. power3.out: fast decisive stop,
+    // zero perceptible lag at the landing point.
+    gsap.killTweensOf({ p: 0 });
+    const obj = { p: 0 };
+    gsap.to(obj, {
+      p: 1,
+      duration: 0.75,
+      ease: 'power3.out',
+      onUpdate() {
+        lenis.scrollTo(startPos + (target - startPos) * obj.p, { immediate: true });
+      },
+      onComplete() {
+        lenis.scrollTo(target, { immediate: true }); // snap exactly to target
         currentSnap = index;
         animDone    = true;
         extendLock();
-        // Preload the chapter after next so it's ready when needed
         if (index + 2 <= 4) preloadChapter(index + 2);
       },
     });
