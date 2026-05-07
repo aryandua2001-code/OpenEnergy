@@ -3,28 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="OpenEnergy — Pioneering solar energy and battery storage solutions for a sustainable future. Experience the journey from sunlight to stored power." />
-  <title>OpenEnergy — Power the Future</title>
+  <meta name="description" content="OpenEnergy is a Jaipur-based EPC and BESS manufacturer delivering turnkey solar parks and grid-scale battery storage in India. Cell-to-container manufacturing, end-to-end." />
+  <title>OpenEnergy — Solar & BESS EPC · India</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-
-  <!-- ═══════════════════════════════════════════ PRELOADER ══ -->
-  <div id="preloader" aria-label="Loading OpenEnergy experience">
-    <div class="preloader-inner">
-      <div class="preloader-logo">
-        <span class="logo-open">Open</span><span class="logo-energy">Energy</span>
-      </div>
-      <div class="preloader-bar">
-        <div class="preloader-fill" id="preloader-fill"></div>
-      </div>
-      <p class="preloader-text" id="preloader-text">Initializing experience...</p>
-    </div>
-  </div>
 
   <!-- ═══════════════════════════════════════════ NAV ════════ -->
   <nav id="navbar" role="navigation" aria-label="Main navigation">
@@ -34,11 +21,12 @@
       </a>
       <ul class="nav-links" role="list">
         <li><a href="#solutions" id="nav-solutions">Solutions</a></li>
-        <li><a href="#technology" id="nav-technology">Technology</a></li>
+        <li><a href="#manufacturing" id="nav-manufacturing">Manufacturing</a></li>
+        <li><a href="#process" id="nav-process">Process</a></li>
         <li><a href="#about" id="nav-about">About</a></li>
         <li><a href="#contact" id="nav-contact">Contact</a></li>
       </ul>
-      <a href="#contact" class="nav-cta" id="nav-cta-btn">Get Started</a>
+      <a href="#contact" class="nav-cta" id="nav-cta-btn">Request Proposal</a>
     </div>
   </nav>
 
@@ -49,60 +37,59 @@
     <div id="video-sticky-wrapper">
       <canvas id="energy-canvas" aria-hidden="true"></canvas>
 
-
-      <!-- Hero Overlay (Initial view over the first frame) -->
+      <!-- Hero Overlay -->
       <div class="hero-overlay" id="hero-overlay">
         <div class="hero-tagline" id="hero-tagline">
           <span class="tagline-word">Powering</span>
-          <span class="tagline-word gradient-text">Tomorrow</span>
+          <span class="tagline-word gradient-text">Tomorrow&nbsp;&nbsp;</span>
           <span class="tagline-word">Today</span>
         </div>
-        <p class="hero-sub" id="hero-sub">Pioneering the future of solar energy and intelligent battery storage solutions</p>
+        <p class="hero-sub" id="hero-sub">End-to-end EPC for utility-scale solar parks and grid-scale BESS — backed by an upcoming cell-to-container BESS manufacturing facility in Jaipur, Rajasthan.</p>
         <div class="hero-scroll-hint" id="hero-scroll-hint">
           <span>Scroll to explore</span>
           <div class="scroll-arrow"></div>
         </div>
       </div>
 
-      <!-- ── Overlay panels (one per scroll chapter) ── -->
+      <!-- ── Chapter overlay panels ── -->
       <div class="overlay-panel" id="overlay-0" data-chapter="0">
         <div class="overlay-content">
-          <p class="overlay-eyebrow">Chapter 01</p>
-          <h2 class="overlay-heading">Harnessing the<br /><span class="gradient-text">Power of the Sun</span></h2>
-          <p class="overlay-body">Vast solar arrays capture the sun's limitless energy across thousands of photovoltaic panels engineered for maximum efficiency.</p>
+          <p class="overlay-eyebrow">Chapter 01 · Generation</p>
+          <h2 class="overlay-heading">India needs 10 GW<br />of new solar <span class="gradient-text">a year.</span></h2>
+          <p class="overlay-body">OpenEnergy delivers utility-scale solar parks engineered for the 50°C Indian grid — bifacial TOPCon modules, smart trackers, and yield-optimized layouts across Rajasthan, Gujarat, and the Deccan plateau.</p>
         </div>
       </div>
 
       <div class="overlay-panel" id="overlay-1" data-chapter="1">
         <div class="overlay-content">
-          <p class="overlay-eyebrow">Chapter 02</p>
-          <h2 class="overlay-heading">Sunlight Becomes<br /><span class="gradient-text">Clean Electricity</span></h2>
-          <p class="overlay-body">Advanced photovoltaic cells convert sunlight into electric current at peak quantum efficiency — visible as a cascade of luminous energy pulses.</p>
+          <p class="overlay-eyebrow">Chapter 02 · Storage</p>
+          <h2 class="overlay-heading">Solar without storage<br />is <span class="gradient-text">half a solution.</span></h2>
+          <p class="overlay-body">BESS makes solar dispatchable. We engineer, procure, and integrate grid-scale LFP battery systems — liquid-cooled, augmentation-ready — turning intermittent generation into firm, 24/7 power.</p>
         </div>
       </div>
 
       <div class="overlay-panel" id="overlay-2" data-chapter="2">
         <div class="overlay-content">
-          <p class="overlay-eyebrow">Chapter 03</p>
-          <h2 class="overlay-heading">Delivering Energy<br /><span class="gradient-text">Across the Grid</span></h2>
-          <p class="overlay-body">High-voltage transmission lines carry the harvested electricity across the landscape in a continuous, pulsing flow of clean power.</p>
+          <p class="overlay-eyebrow">Chapter 03 · Manufacturing</p>
+          <h2 class="overlay-heading">Cell to container.<br /><span class="gradient-text">Owned end-to-end.</span></h2>
+          <p class="overlay-body">Our Jaipur facility will be one of India's first vertically-integrated BESS plants — assembling cells into modules, modules into racks, and racks into containers, all under one MNRE-compliant roof.</p>
         </div>
       </div>
 
       <div class="overlay-panel" id="overlay-3" data-chapter="3">
         <div class="overlay-content">
-          <p class="overlay-eyebrow">Chapter 04</p>
-          <h2 class="overlay-heading">Intelligent<br /><span class="gradient-text">Energy Storage</span></h2>
-          <p class="overlay-body">State-of-the-art Battery Energy Storage Systems absorb, manage, and dispatch power precisely when and where it's needed most.</p>
+          <p class="overlay-eyebrow">Chapter 04 · Deployment</p>
+          <h2 class="overlay-heading">50 MW / 100 MWh<br />breaks ground in <span class="gradient-text">Rajasthan.</span></h2>
+          <p class="overlay-body">Our anchor BESS deployment demonstrates sub-second grid response, 2-hour duration, and a 20-year performance warranty — backed by in-house manufacturing and a Tesla-trained engineering team.</p>
         </div>
       </div>
 
       <div class="overlay-panel" id="overlay-4" data-chapter="4">
         <div class="overlay-content overlay-content--center">
           <p class="overlay-eyebrow">OpenEnergy</p>
-          <h2 class="overlay-heading overlay-heading--large">The Future<br />of Energy<br /><span class="gradient-text">is Here</span></h2>
+          <h2 class="overlay-heading overlay-heading--large">Build your park<br />with <span class="gradient-text">us.</span></h2>
           <a href="#contact" class="cta-button" id="hero-cta-btn">
-            <span>Explore Our Solutions</span>
+            <span>Submit Project Brief</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
         </div>
@@ -110,7 +97,7 @@
 
     </div><!-- /video-sticky-wrapper -->
 
-    <!-- Scroll spacer — 5 blocks of 100vh each for snapping -->
+    <!-- Scroll spacer — 5 chapters × 100vh -->
     <div id="scroll-spacer" aria-hidden="true">
       <div class="snap-point"></div>
       <div class="snap-point"></div>
@@ -121,65 +108,217 @@
 
   </section>
 
-  <!-- ════════════════════════ STATS STRIP ══════════════════ -->
-  <section id="stats" aria-label="Key statistics">
-    <div class="stats-inner">
-      <div class="stat-item" id="stat-0">
-        <span class="stat-number" data-target="500">0</span><span class="stat-unit">MW+</span>
-        <p class="stat-label">Solar Capacity Deployed</p>
+  <!-- ════════════════════════ CREDIBILITY STRIP ════════════ -->
+  <section id="credibility" aria-label="Company credibility markers">
+    <div class="cred-inner">
+      <div class="cred-item stat-item">
+        <span class="cred-val">2026</span>
+        <span class="cred-key">Founded · Jaipur, Rajasthan</span>
       </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item" id="stat-1">
-        <span class="stat-number" data-target="2">0</span><span class="stat-unit">GWh</span>
-        <p class="stat-label">Battery Storage Installed</p>
+      <div class="cred-divider" aria-hidden="true"></div>
+      <div class="cred-item stat-item">
+        <span class="cred-val">Cell → Container</span>
+        <span class="cred-key">Vertical integration roadmap</span>
       </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item" id="stat-2">
-        <span class="stat-number" data-target="40">0</span><span class="stat-unit">+</span>
-        <p class="stat-label">Countries Powered</p>
+      <div class="cred-divider" aria-hidden="true"></div>
+      <div class="cred-item stat-item">
+        <span class="cred-val">50 MW / 100 MWh</span>
+        <span class="cred-key">Anchor BESS pipeline · Rajasthan</span>
       </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item" id="stat-3">
-        <span class="stat-number" data-target="98">0</span><span class="stat-unit">%</span>
-        <p class="stat-label">System Uptime</p>
+      <div class="cred-divider" aria-hidden="true"></div>
+      <div class="cred-item stat-item">
+        <span class="cred-val">2 GWh / yr</span>
+        <span class="cred-key">Manufacturing capacity target</span>
+      </div>
+      <div class="cred-divider" aria-hidden="true"></div>
+      <div class="cred-item stat-item">
+        <span class="cred-val">CEA + CEIG</span>
+        <span class="cred-key">Statutory compliance framework</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ WHY OPENENERGY ══════════════ -->
+  <section id="why" aria-label="Why OpenEnergy">
+    <div class="section-inner">
+      <p class="section-eyebrow">Why OpenEnergy</p>
+      <h2 class="section-heading">Founded by battery engineers<br />who have <span class="gradient-text">built at scale.</span></h2>
+      <div class="why-grid">
+        <div class="why-pillar">
+          <div class="why-num gradient-text">01</div>
+          <h3 class="why-title">Vertically integrated</h3>
+          <p class="why-desc">We don't broker BESS — we build it. From cell qualification to container assembly, our Jaipur facility lets us guarantee specifications, lead times, and warranty terms most EPCs can only pass through.</p>
+        </div>
+        <div class="why-pillar">
+          <div class="why-num gradient-text">02</div>
+          <h3 class="why-title">Built for the Indian grid</h3>
+          <p class="why-desc">Designs tuned for 50°C ambient, monsoon humidity, and the CEA grid code. IEC 62933, UL 9540A, and CEIG approvals built into every package as standard — not as extras.</p>
+        </div>
+        <div class="why-pillar">
+          <div class="why-num gradient-text">03</div>
+          <h3 class="why-title">Single-source accountability</h3>
+          <p class="why-desc">One contract, one PM, one warranty. No finger-pointing between OEM and EPC when an inverter trips at 2 AM — we own it because we built it. End-to-end responsibility, contractually.</p>
+        </div>
+        <div class="why-pillar">
+          <div class="why-num gradient-text">04</div>
+          <h3 class="why-title">Bankable from day one</h3>
+          <p class="why-desc">Designs, BoMs, and contracts structured to lender norms — IREDA, PFC, REC, and commercial bank-ready DPRs out of the box. We model for lenders before we model for construction.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ════════════════════════ SOLUTIONS ════════════════════ -->
-  <section id="solutions" aria-label="Our solutions">
+  <section id="solutions" aria-label="Our services">
     <div class="section-inner">
-      <p class="section-eyebrow">What We Do</p>
-      <h2 class="section-heading">Complete Energy Ecosystem</h2>
-      <p class="section-sub">From generation to storage, we deliver end-to-end renewable energy infrastructure.</p>
+      <p class="section-eyebrow">What We Deliver</p>
+      <h2 class="section-heading">Three integrated capabilities.<br /><span class="gradient-text">One accountable EPC.</span></h2>
+      <p class="section-sub">From utility-scale solar parks to grid-scale battery storage assembled in-house — engineered, procured, and built for India.</p>
 
       <div class="solutions-grid">
+
         <div class="solution-card" id="solution-solar">
           <div class="solution-icon" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
           </div>
-          <h3 class="solution-title">Solar Parks</h3>
-          <p class="solution-desc">Utility-scale photovoltaic installations engineered for maximum yield and long-term performance across diverse terrains.</p>
-          <span class="solution-link">Learn more →</span>
+          <p class="solution-service-tag">01 · EPC</p>
+          <h3 class="solution-title">Solar EPC</h3>
+          <p class="solution-desc">Turnkey utility-scale photovoltaic parks for IPPs and C&amp;I open-access developers across India.</p>
+          <table class="solution-spec-table">
+            <tbody>
+              <tr><th>Capacity</th><td>5 – 500 MWp</td></tr>
+              <tr><th>Modules</th><td>Bifacial TOPCon / mono-PERC, ALMM-listed</td></tr>
+              <tr><th>Topology</th><td>Fixed-tilt &amp; single-axis tracker</td></tr>
+              <tr><th>BoP</th><td>HV switchyard, evacuation, SCADA</td></tr>
+              <tr><th>Compliance</th><td>CEA · CEIG · State DISCOM</td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="solution-card solution-card--featured" id="solution-storage">
-          <div class="solution-badge">Featured</div>
+        <div class="solution-card solution-card--featured" id="solution-bess">
+          <div class="solution-badge">Anchor Offering</div>
           <div class="solution-icon" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" x2="12" y1="12" y2="16"/><line x1="10" x2="14" y1="14" y2="14"/></svg>
           </div>
-          <h3 class="solution-title">Battery Energy Storage</h3>
-          <p class="solution-desc">Grid-scale BESS solutions that store surplus renewable energy and dispatch it reliably — stabilizing the grid 24/7.</p>
-          <span class="solution-link">Learn more →</span>
+          <p class="solution-service-tag">02 · EPC + Manufacturing</p>
+          <h3 class="solution-title">BESS EPC</h3>
+          <p class="solution-desc">Grid-scale battery storage — engineered, assembled in-country at Jaipur, and deployed turnkey.</p>
+          <table class="solution-spec-table">
+            <tbody>
+              <tr><th>Power / Energy</th><td>5–200 MW · 10–800 MWh</td></tr>
+              <tr><th>Chemistry</th><td>LFP prismatic (NMC on request)</td></tr>
+              <tr><th>Cooling</th><td>Liquid-cooled, dehumidified</td></tr>
+              <tr><th>Duration</th><td>1–4 h, augmentation-ready</td></tr>
+              <tr><th>Compliance</th><td>IEC 62933 · UL 9540A · NFPA 855</td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="solution-card" id="solution-grid">
+        <div class="solution-card" id="solution-subepc">
           <div class="solution-icon" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12"/><path d="M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M15 6a9 9 0 0 1-9 9"/><path d="M18 15v6"/><path d="M21 18h-6"/></svg>
           </div>
-          <h3 class="solution-title">Grid Integration</h3>
-          <p class="solution-desc">Smart grid management and transmission infrastructure that seamlessly connects renewable generation to existing networks.</p>
-          <span class="solution-link">Learn more →</span>
+          <p class="solution-service-tag">03 · Sub-EPC</p>
+          <h3 class="solution-title">Package Contracting</h3>
+          <p class="solution-desc">BoP, MMS, civil, and HV packages for tier-1 EPCs. BESS supply at container or rack level.</p>
+          <table class="solution-spec-table">
+            <tbody>
+              <tr><th>Scope</th><td>BoP · MMS · Civil · HV</td></tr>
+              <tr><th>BESS supply</th><td>Container or rack-level</td></tr>
+              <tr><th>Engineering</th><td>PVsyst · ETAP · DigSILENT</td></tr>
+              <tr><th>O&amp;M</th><td>2–25 yr terms, PR guarantee</td></tr>
+              <tr><th>Geography</th><td>Pan-India · Rajasthan-anchored</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ MANUFACTURING ═══════════════ -->
+  <section id="manufacturing" aria-label="Manufacturing facility">
+    <div class="manu-inner">
+      <div class="manu-text">
+        <p class="section-eyebrow">Manufacturing</p>
+        <h2 class="section-heading">Cell-to-container,<br />in <span class="gradient-text">Rajasthan.</span></h2>
+        <p class="manu-lede">OpenEnergy is establishing a vertically-integrated BESS assembly facility in Jaipur — designed to qualify cells, assemble modules and racks, and deliver containerised energy storage systems built to Indian grid conditions.</p>
+        <div class="manu-specs">
+          <div class="manu-spec-row"><span>FACILITY</span><b>Jaipur, Rajasthan</b></div>
+          <div class="manu-spec-row"><span>SCOPE</span><b>Cell qualification → Module → Rack → Container</b></div>
+          <div class="manu-spec-row"><span>CHEMISTRY</span><b>LFP prismatic &amp; blade-format</b></div>
+          <div class="manu-spec-row"><span>TARGET CAPACITY</span><b>2 GWh / yr (phased rollout)</b></div>
+          <div class="manu-spec-row"><span>COMMISSIONING</span><b>Phased · 2026 → 2027</b></div>
+          <div class="manu-spec-row"><span>COMPLIANCE</span><b>UL 9540A · IEC 62619 · ALMM (when issued)</b></div>
+        </div>
+      </div>
+      <div class="manu-flow-wrap">
+        <p class="manu-flow-label">Production flow</p>
+        <div class="manu-flow">
+          <div class="manu-step">
+            <span class="manu-step-num">01</span>
+            <b>Cell qualification</b>
+            <p>Incoming inspection, capacity binning, abuse testing</p>
+          </div>
+          <div class="manu-arrow" aria-hidden="true">→</div>
+          <div class="manu-step">
+            <span class="manu-step-num">02</span>
+            <b>Module assembly</b>
+            <p>Welding, BMS integration, insulation testing</p>
+          </div>
+          <div class="manu-arrow" aria-hidden="true">→</div>
+          <div class="manu-step">
+            <span class="manu-step-num">03</span>
+            <b>Rack build</b>
+            <p>Mechanical, electrical, thermal sub-assembly</p>
+          </div>
+          <div class="manu-arrow" aria-hidden="true">→</div>
+          <div class="manu-step">
+            <span class="manu-step-num">04</span>
+            <b>Container integration</b>
+            <p>HVAC, fire suppression, PCS, EMS, FAT</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════ EPC PROCESS ═════════════════ -->
+  <section id="process" aria-label="EPC execution process">
+    <div class="section-inner">
+      <p class="section-eyebrow">Execution</p>
+      <h2 class="section-heading">A documented EPC process,<br /><span class="gradient-text">end to end.</span></h2>
+      <p class="section-sub">Every project follows a fixed, lender-documented methodology — from the first yield model to 25 years of O&amp;M.</p>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="process-num gradient-text">01</div>
+          <h4 class="process-title">Feasibility</h4>
+          <p class="process-desc">Yield modeling (PVsyst), grid study, land due diligence, NPV / IRR analysis.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num gradient-text">02</div>
+          <h4 class="process-title">DPR &amp; Engineering</h4>
+          <p class="process-desc">Lender-ready DPR, PFD, SLD, GA drawings, BoQ and cost benchmarking.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num gradient-text">03</div>
+          <h4 class="process-title">Procurement</h4>
+          <p class="process-desc">Module, inverter, BESS, BoP. ALMM-tracked, FAT-witnessed, delivery-guaranteed.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num gradient-text">04</div>
+          <h4 class="process-title">Construction</h4>
+          <p class="process-desc">Civil, MMS, DC/AC, HV switchyard and grid evacuation. Safety-led execution.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num gradient-text">05</div>
+          <h4 class="process-title">Commissioning</h4>
+          <p class="process-desc">Pre-comm checks, SAT, CEIG inspection, COD documentation and handover.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num gradient-text">06</div>
+          <h4 class="process-title">O&amp;M Handover</h4>
+          <p class="process-desc">2–25 yr O&amp;M with PR guarantee, SCADA and drone thermography monitoring.</p>
         </div>
       </div>
     </div>
@@ -189,27 +328,27 @@
   <section id="technology" aria-label="Our technology">
     <div class="section-inner">
       <p class="section-eyebrow">Technology</p>
-      <h2 class="section-heading">Built for the <span class="gradient-text">Next Decade</span></h2>
+      <h2 class="section-heading">Engineered for the <span class="gradient-text">Indian grid.</span></h2>
       <div class="tech-grid">
         <div class="tech-item" id="tech-0">
           <div class="tech-number gradient-text">01</div>
-          <h3 class="tech-title">High-Efficiency PV Cells</h3>
-          <p class="tech-desc">Bifacial monocrystalline silicon panels with anti-reflective coatings achieving up to 23% efficiency.</p>
+          <h3 class="tech-title">High-Efficiency PV Modules</h3>
+          <p class="tech-desc">Bifacial monocrystalline TOPCon panels, ALMM-listed and field-validated for 50°C ambient — achieving up to 23% efficiency across Rajasthan, Gujarat, and the Deccan plateau.</p>
         </div>
         <div class="tech-item" id="tech-1">
           <div class="tech-number gradient-text">02</div>
-          <h3 class="tech-title">Liquid-Cooled BESS</h3>
-          <p class="tech-desc">Advanced thermal management in our battery systems ensures safety, longevity, and consistent performance in any climate.</p>
+          <h3 class="tech-title">Liquid-Cooled LFP BESS</h3>
+          <p class="tech-desc">LFP chemistry with active liquid thermal management — ensuring safety, longevity, and consistent round-trip efficiency above 92% in any Indian climate. IEC 62933 compliant.</p>
         </div>
         <div class="tech-item" id="tech-2">
           <div class="tech-number gradient-text">03</div>
           <h3 class="tech-title">AI-Powered Grid Dispatch</h3>
-          <p class="tech-desc">Machine learning algorithms predict demand curves and optimize energy dispatch in real time, minimizing waste.</p>
+          <p class="tech-desc">Machine-learning EMS that predicts demand, schedules charge/discharge, and optimises ancillary-services revenue in real time — CEA Grid Code and IEC 62933 compliant.</p>
         </div>
         <div class="tech-item" id="tech-3">
           <div class="tech-number gradient-text">04</div>
-          <h3 class="tech-title">Remote Monitoring</h3>
-          <p class="tech-desc">24/7 SCADA and IoT-based asset monitoring with predictive maintenance alerts and live performance dashboards.</p>
+          <h3 class="tech-title">SCADA &amp; Remote Monitoring</h3>
+          <p class="tech-desc">24/7 SCADA with IoT asset monitoring, predictive maintenance alerts, drone thermography, and live performance dashboards — across every site, any time.</p>
         </div>
       </div>
     </div>
@@ -220,13 +359,29 @@
     <div class="about-inner">
       <div class="about-text">
         <p class="section-eyebrow">About Us</p>
-        <h2 class="section-heading">Energy Independence<br />at <span class="gradient-text">Global Scale</span></h2>
-        <p class="about-body">OpenEnergy is a leading renewable energy company dedicated to accelerating the world's transition to clean power. We design, build, and operate utility-scale solar parks and battery energy storage systems that deliver reliable, affordable electricity to communities and industries worldwide.</p>
-        <p class="about-body">Founded on the principle that access to clean energy is a fundamental right, we engineer solutions that are as resilient as they are sustainable.</p>
-        <a href="#contact" class="cta-button cta-button--outline" id="about-cta-btn">
-          <span>Our Story</span>
-        </a>
+        <h2 class="section-heading">Energy independence<br />at <span class="gradient-text">national scale.</span></h2>
+        <p class="about-body">OpenEnergy is an Indian EPC and BESS manufacturer dedicated to accelerating the country's transition to clean, dispatchable power. We design, build, and locally manufacture the storage that turns intermittent renewables into reliable infrastructure — so utilities, IPPs, and industries don't have to choose between affordability and reliability.</p>
+        <p class="about-body">Founded on a single conviction: India will not import its way to a renewable grid. The cells, the engineering, the assembly, and the accountability all need to live in-country. OpenEnergy is built around that thesis.</p>
+
+        <div class="founder-card">
+          <div class="founder-mono">AD</div>
+          <div class="founder-info">
+            <h4>Aryan Dua</h4>
+            <p class="founder-role">Founder &amp; CEO</p>
+            <p class="founder-bio">Battery engineering at Tesla — design and manufacturing of energy storage systems at the world's most demanding standards. Founded OpenEnergy to bring that engineering rigour to India's grid.</p>
+            <div class="founder-tags">Battery cell engineering · BMS · BESS manufacturing · Grid storage</div>
+          </div>
+        </div>
+
+        <div class="hiring-card">
+          <div class="hiring-badge">Hiring</div>
+          <div class="hiring-content">
+            <h4>Head of EPC</h4>
+            <p>Senior solar / BoP execution lead with 200+ MW utility-scale delivered. Joining to lead site execution and contractor network across Rajasthan and pan-India deployments.</p>
+          </div>
+        </div>
       </div>
+
       <div class="about-visual" aria-hidden="true">
         <div class="about-glow-orb"></div>
         <div class="about-ring about-ring--1"></div>
@@ -247,36 +402,146 @@
     </div>
   </section>
 
-  <!-- ════════════════════════ CONTACT ══════════════════════ -->
-  <section id="contact" aria-label="Contact us">
+  <!-- ════════════════════════ CONTACT / RFP ════════════════ -->
+  <section id="contact" aria-label="Contact and project intake">
     <div class="section-inner">
       <p class="section-eyebrow">Get In Touch</p>
-      <h2 class="section-heading">Let's Build the<br /><span class="gradient-text">Future Together</span></h2>
-      <p class="section-sub">Ready to deploy renewable energy infrastructure? Our team of experts is here to help you every step of the way.</p>
-      <form class="contact-form" id="contact-form" novalidate>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="contact-name">Full Name</label>
-            <input type="text" id="contact-name" name="name" placeholder="Your full name" required />
+      <h2 class="section-heading">Have a project<br /><span class="gradient-text">under planning?</span></h2>
+      <p class="section-sub">Send us your tender pack, land status, or grid connectivity letter. We respond within 48 hours with a preliminary scope and rough order of magnitude — no boilerplate, no unsolicited calls.</p>
+
+      <div class="rfp-grid">
+        <aside class="rfp-info">
+          <div class="rfp-info-block">
+            <p class="rfp-info-tag">— General inquiries</p>
+            <a class="rfp-email" href="mailto:inquiry@openenergy.in">inquiry@openenergy.in</a>
+            <p>RFP submissions, partnership enquiries, and vendor onboarding. Replies within 48 business hours.</p>
           </div>
-          <div class="form-group">
-            <label for="contact-email">Email Address</label>
-            <input type="email" id="contact-email" name="email" placeholder="your@email.com" required />
+          <div class="rfp-divider" aria-hidden="true"></div>
+          <div class="rfp-info-block">
+            <p class="rfp-info-tag">— Registered office</p>
+            <h4>OpenEnergy Pvt. Ltd.</h4>
+            <div class="rfp-detail-row"><span>HQ</span><b>Jaipur, Rajasthan, India</b></div>
+            <div class="rfp-detail-row"><span>FACILITY</span><b>Manufacturing · under development</b></div>
+            <div class="rfp-detail-row"><span>HOURS</span><b>Mon–Sat · 09:30–19:00 IST</b></div>
           </div>
+          <div class="rfp-divider" aria-hidden="true"></div>
+          <div class="rfp-info-block">
+            <p class="rfp-info-tag">— Active scopes</p>
+            <div class="rfp-detail-row"><span>EPC</span><b>Utility-scale solar &amp; BESS · 5 MW+</b></div>
+            <div class="rfp-detail-row"><span>SUB-EPC</span><b>BESS integration &amp; HV packages</b></div>
+            <div class="rfp-detail-row"><span>SUPPLY</span><b>BESS containers · Jaipur (Q4 2026)</b></div>
+          </div>
+        </aside>
+
+        <div class="rfp-form-wrap">
+          <div class="rfp-form-head">
+            <h3>Project intake</h3>
+            <span class="rfp-form-meta">RFP · v1.0</span>
+          </div>
+          <form class="contact-form" id="contact-form" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-name">Full Name</label>
+                <input type="text" id="contact-name" name="name" placeholder="Your full name" required />
+              </div>
+              <div class="form-group">
+                <label for="contact-company">Company / Organisation</label>
+                <input type="text" id="contact-company" name="company" placeholder="ABC Renewables Pvt. Ltd." />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-email">Work Email</label>
+                <input type="email" id="contact-email" name="email" placeholder="you@company.com" required />
+              </div>
+              <div class="form-group">
+                <label for="contact-phone">Phone</label>
+                <input type="tel" id="contact-phone" name="phone" placeholder="+91 98XXX XXXXX" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-type">Inquiry Type</label>
+                <select id="contact-type" name="type">
+                  <option value="" disabled selected>Select one…</option>
+                  <option>Utility-scale Solar EPC</option>
+                  <option>BESS EPC (standalone)</option>
+                  <option>Solar + BESS Hybrid</option>
+                  <option>C&amp;I Open Access</option>
+                  <option>Sub-EPC / Package Contract</option>
+                  <option>BESS Supply (containers)</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="contact-capacity">Capacity</label>
+                <input type="text" id="contact-capacity" name="capacity" placeholder="e.g. 50 MW / 100 MWh" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-state">Project State</label>
+                <select id="contact-state" name="state">
+                  <option value="" disabled selected>Select state…</option>
+                  <option>Rajasthan</option>
+                  <option>Gujarat</option>
+                  <option>Madhya Pradesh</option>
+                  <option>Maharashtra</option>
+                  <option>Karnataka</option>
+                  <option>Andhra Pradesh</option>
+                  <option>Tamil Nadu</option>
+                  <option>Other / Pan-India</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="contact-cod">Target COD</label>
+                <select id="contact-cod" name="cod">
+                  <option value="" disabled selected>Select timeframe…</option>
+                  <option>Q1–Q2 2026</option>
+                  <option>H2 2026</option>
+                  <option>2027</option>
+                  <option>2028+</option>
+                  <option>Not yet decided</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contact-message">Message — scope, land status, connectivity, off-taker</label>
+              <textarea id="contact-message" name="message" rows="4" placeholder="Land: 250 acres allotted (LOA dated 03/2025). Connectivity: 220 kV bay sanctioned at Bikaner-II. Off-taker: RVUNL via SECI tender. Looking for full EPC + 5-yr O&M…" required></textarea>
+            </div>
+            <div class="rfp-form-foot">
+              <p>Files (tender pack, DPR, drawings) can be shared over a secure link after first response.</p>
+              <button type="submit" class="cta-button" id="contact-submit-btn">
+                <span>Send RFP →</span>
+              </button>
+            </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="contact-subject">Subject</label>
-          <input type="text" id="contact-subject" name="subject" placeholder="How can we help?" />
-        </div>
-        <div class="form-group">
-          <label for="contact-message">Message</label>
-          <textarea id="contact-message" name="message" rows="5" placeholder="Tell us about your project..." required></textarea>
-        </div>
-        <button type="submit" class="cta-button" id="contact-submit-btn">
-          <span>Send Message</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </button>
-      </form>
+      </div>
+    </div>
+
+    <!-- 4-step response process -->
+    <div class="contact-process-strip" aria-label="Response process">
+      <div class="cps-item">
+        <div class="cps-num">01 · INTAKE</div>
+        <h5>You send · we read</h5>
+        <p>Every RFP is reviewed by an engineer, not a salesperson. No automated triage.</p>
+      </div>
+      <div class="cps-item">
+        <div class="cps-num">02 · 48 HOURS</div>
+        <h5>Preliminary response</h5>
+        <p>Scope outline, indicative tariff band, and clarifying questions — typically a one-pager.</p>
+      </div>
+      <div class="cps-item">
+        <div class="cps-num">03 · DEEP DIVE</div>
+        <h5>Site walk &amp; DPR</h5>
+        <p>If aligned, we visit the site and issue a bankable DPR within 3–4 weeks.</p>
+      </div>
+      <div class="cps-item">
+        <div class="cps-num">04 · CONTRACT</div>
+        <h5>EPC commitment</h5>
+        <p>Fixed-price, milestone-linked EPC with PR guarantees and lender-ready documentation.</p>
+      </div>
     </div>
   </section>
 
@@ -284,31 +549,44 @@
   <footer id="footer" aria-label="Site footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <span class="logo-open">Open</span><span class="logo-energy">Energy</span>
-        <p class="footer-tagline">Powering Tomorrow, Today.</p>
+        <a href="#" class="nav-logo">
+          <span class="logo-open">Open</span><span class="logo-energy">Energy</span>
+        </a>
+        <p class="footer-tagline">Engineering, Procurement &amp; Construction<br />BESS Manufacturing · Jaipur, Rajasthan</p>
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h4>Solutions</h4>
+          <h4>Capabilities</h4>
           <ul>
-            <li><a href="#solutions">Solar Parks</a></li>
-            <li><a href="#solutions">Battery Storage</a></li>
-            <li><a href="#solutions">Grid Integration</a></li>
+            <li><a href="#solutions">Solar EPC</a></li>
+            <li><a href="#solutions">BESS EPC</a></li>
+            <li><a href="#manufacturing">Manufacturing</a></li>
+            <li><a href="#process">O&amp;M</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <ul>
             <li><a href="#about">About Us</a></li>
+            <li><a href="#about">Leadership</a></li>
             <li><a href="#technology">Technology</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#contact">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:inquiry@openenergy.in">inquiry@openenergy.in</a></li>
+            <li><a href="#contact">Submit RFP</a></li>
+            <li><a href="#contact">Vendor onboarding</a></li>
+            <li><a href="#contact">Press</a></li>
           </ul>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 OpenEnergy. All rights reserved.</p>
-      <p>Built for a sustainable future.</p>
+      <p>© 2026 OpenEnergy India Pvt. Ltd. · Jaipur, Rajasthan</p>
+      <p>inquiry@openenergy.in · Built for India's grid.</p>
     </div>
   </footer>
 
