@@ -152,22 +152,41 @@ function setupScrollSync() {
   const SNAP_POINTS = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
   let currentSnap = 0;
   let isAnimating = false;
-  let animDone    = false;
-  let quietTimer  = null;
+  let releaseTimer = null;
+  let lastInputAt = 0;
+  let unlockEarliestAt = 0;
   let activeTween = null;
 
-  function extendLock() {
-    clearTimeout(quietTimer);
-    quietTimer = setTimeout(() => {
-      if (animDone) { isAnimating = false; animDone = false; }
-    }, 400);
+  function markChapterInput() {
+    lastInputAt = performance.now();
+  }
+
+  function scheduleUnlock() {
+    clearTimeout(releaseTimer);
+
+    const check = () => {
+      const now = performance.now();
+      const inputQuietFor = now - lastInputAt;
+      const canUnlock = now >= unlockEarliestAt && inputQuietFor >= 140;
+
+      if (canUnlock) {
+        isAnimating = false;
+        return;
+      }
+
+      const waitForInput = Math.max(0, 140 - inputQuietFor);
+      const waitForMin = Math.max(0, unlockEarliestAt - now);
+      releaseTimer = setTimeout(check, Math.max(16, Math.min(120, waitForInput, waitForMin)));
+    };
+
+    releaseTimer = setTimeout(check, 16);
   }
 
   function goToChapter(index) {
     if (isAnimating) return;
     isAnimating = true;
-    animDone    = false;
-    clearTimeout(quietTimer);
+    unlockEarliestAt = Number.POSITIVE_INFINITY;
+    clearTimeout(releaseTimer);
     if (activeTween) activeTween.kill();
 
     const total  = section.offsetHeight - window.innerHeight;
@@ -193,8 +212,8 @@ function setupScrollSync() {
         renderProgress(targetProgress);
         lenis.scrollTo(target, { immediate: true });
         currentSnap = index;
-        animDone    = true;
-        extendLock();
+        unlockEarliestAt = performance.now() + 120;
+        scheduleUnlock();
         if (index + 2 <= 4) preloadChapter(index + 2);
       },
     });
@@ -212,13 +231,15 @@ function setupScrollSync() {
     if (down && currentSnap < SNAP_POINTS.length - 1) {
       e.preventDefault();
       e.stopImmediatePropagation();
+      markChapterInput();
       if (!isAnimating) goToChapter(currentSnap + 1);
-      else if (animDone) extendLock();
+      else scheduleUnlock();
     } else if (!down && currentSnap > 0) {
       e.preventDefault();
       e.stopImmediatePropagation();
+      markChapterInput();
       if (!isAnimating) goToChapter(currentSnap - 1);
-      else if (animDone) extendLock();
+      else scheduleUnlock();
     }
   }, { passive: false, capture: true });
 
@@ -245,7 +266,8 @@ function setupScrollSync() {
     if (shouldLock) {
       e.preventDefault();
       e.stopImmediatePropagation();
-      if (animDone) extendLock();
+      markChapterInput();
+      if (isAnimating) scheduleUnlock();
     }
   }, { passive: false, capture: true });
 
@@ -258,8 +280,10 @@ function setupScrollSync() {
     if (Math.abs(delta) < 25) return;
 
     if (delta > 0 && currentSnap < SNAP_POINTS.length - 1) {
+      markChapterInput();
       if (!isAnimating) goToChapter(currentSnap + 1);
     } else if (delta < 0 && currentSnap > 0) {
+      markChapterInput();
       if (!isAnimating) goToChapter(currentSnap - 1);
     }
   }, { passive: true });
