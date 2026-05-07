@@ -68,8 +68,28 @@ function drawFrame(index) {
   const ch  = canvas.height / dpr;
   const iw  = bmp.naturalWidth  || 1920;
   const ih  = bmp.naturalHeight || 1080;
-  const s   = Math.max(cw / iw, ch / ih);
-  ctx.drawImage(bmp, (cw - iw * s) / 2, (ch - ih * s) / 2, iw * s, ih * s);
+
+  // Cover-fit by cropping the source rectangle instead of drawing a huge
+  // offscreen destination and relying on canvas clipping. On portrait iPhones,
+  // the old path drew a ~1500px-wide CSS rectangle every frame even though only
+  // the center ~390px was visible. Cropping first keeps the destination exactly
+  // viewport-sized and removes a lot of Safari canvas work.
+  const canvasAspect = cw / ch;
+  const imageAspect  = iw / ih;
+  let sx = 0;
+  let sy = 0;
+  let sw = iw;
+  let sh = ih;
+
+  if (imageAspect > canvasAspect) {
+    sw = ih * canvasAspect;
+    sx = (iw - sw) / 2;
+  } else {
+    sh = iw / canvasAspect;
+    sy = (ih - sh) / 2;
+  }
+
+  ctx.drawImage(bmp, sx, sy, sw, sh, 0, 0, cw, ch);
 }
 
 window.addEventListener('resize', resizeCanvas, { passive: true });
