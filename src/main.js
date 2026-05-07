@@ -66,7 +66,15 @@ function resizeCanvas() {
 }
 
 function drawFrame(index) {
-  const bmp = bitmaps[index];
+  // If this frame isn't loaded yet, find the nearest available one
+  // so the canvas never goes blank on slow connections.
+  let bmp = bitmaps[index];
+  if (!bmp) {
+    for (let d = 1; d < 48; d++) {
+      if (bitmaps[index - d]) { bmp = bitmaps[index - d]; break; }
+      if (bitmaps[index + d]) { bmp = bitmaps[index + d]; break; }
+    }
+  }
   if (!bmp) return;
   const dpr = window.devicePixelRatio || 1;
   const cw  = canvas.width  / dpr;
@@ -114,8 +122,14 @@ function preloadChapter(chapterIndex) {
 }
 
 function preloadFrames() {
-  // Load chapter 1 immediately, then preload chapter 2 in background
-  preloadChapter(0).then(() => preloadChapter(1));
+  // Load chapters 0+1 immediately (96 frames, ~27MB) — covers the first
+  // two chapters the user will see before any scroll interaction.
+  // Chapters 2–4 load lazily in the background after that.
+  preloadChapter(0)
+    .then(() => preloadChapter(1))
+    .then(() => preloadChapter(2))
+    .then(() => preloadChapter(3))
+    .then(() => preloadChapter(4));
 }
 
 // ── Scroll → Frame Sync ──────────────────────────────────────

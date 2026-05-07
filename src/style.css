@@ -48,7 +48,6 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden; /* iOS Safari needs this on html, not just body */
 }
 
 body {
