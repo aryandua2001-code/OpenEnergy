@@ -340,7 +340,6 @@ function setupReveals() {
     document.querySelector('.about-text'),
     document.querySelector('.about-visual'),
     document.querySelector('.founder-card'),
-    document.querySelector('.hiring-card'),
     document.querySelector('.rfp-grid'),
   ].filter(Boolean);
 
@@ -358,11 +357,36 @@ function setupReveals() {
 function setupContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('contact-submit-btn');
-    btn.querySelector('span').textContent = 'Message Sent ✓';
-    setTimeout(() => { btn.querySelector('span').textContent = 'Send RFP →'; }, 3000);
+    const label = btn.querySelector('span');
+    const original = label.textContent;
+
+    if (!form.reportValidity()) return;
+
+    btn.disabled = true;
+    label.textContent = 'Sending...';
+
+    try {
+      const formData = new FormData(form);
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString(),
+      });
+      if (!response.ok) throw new Error('Form submission failed');
+
+      label.textContent = 'RFP Sent ✓';
+      form.reset();
+    } catch (_) {
+      label.textContent = 'Send failed — email us';
+    } finally {
+      setTimeout(() => {
+        label.textContent = original;
+        btn.disabled = false;
+      }, 3500);
+    }
   });
 }
 

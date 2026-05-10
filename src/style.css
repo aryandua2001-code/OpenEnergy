@@ -401,6 +401,12 @@ body {
   box-shadow: 0 8px 32px rgba(0, 151, 178, 0.4);
 }
 
+.cta-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+}
+
 .cta-button--outline {
   background: transparent;
   border: 1px solid var(--border-glow);
@@ -753,6 +759,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+}
+
+.form-hidden {
+  display: none;
 }
 
 .form-row {
@@ -1312,48 +1322,6 @@ body {
   color: var(--text-muted);
 }
 
-.hiring-card {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  background: rgba(126, 217, 87, 0.04);
-  border: 1px solid rgba(126, 217, 87, 0.2);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-top: 1rem;
-}
-
-.hiring-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.3rem 0.7rem;
-  background: var(--brand-green-dim);
-  border: 1px solid rgba(126, 217, 87, 0.3);
-  border-radius: 100px;
-  color: var(--brand-green);
-  white-space: nowrap;
-  flex-shrink: 0;
-  align-self: flex-start;
-  margin-top: 2px;
-}
-
-.hiring-content h4 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin-bottom: 0.5rem;
-}
-
-.hiring-content p {
-  font-size: 0.835rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin: 0;
-}
-
 /* ════════════════════════════════════════ CONTACT RFP ══════ */
 .rfp-grid {
   display: grid;
@@ -1656,7 +1624,6 @@ body {
 
   /* Founder card */
   .founder-card { flex-direction: column; }
-  .hiring-card  { flex-direction: column; }
 
   /* Contact */
   .rfp-form-wrap         { padding: 1.5rem 1rem; }
